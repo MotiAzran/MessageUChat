@@ -17,6 +17,15 @@
     <ClCompile Include="BufferUtils.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="AESWrapper.cpp">
+      <Filter>CryptoWrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="Base64Wrapper.cpp">
+      <Filter>CryptoWrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="RSAWrapper.cpp">
+      <Filter>CryptoWrappers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Network">
@@ -27,6 +36,9 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{b468b3b7-f90f-48b5-bc6c-c2632d3e103a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CryptoWrappers">
+      <UniqueIdentifier>{19f7e10b-2b84-4b46-a15b-1fa36ff058ea}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +62,15 @@
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AESWrapper.h">
+      <Filter>CryptoWrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="Base64Wrapper.h">
+      <Filter>CryptoWrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="RSAWrapper.h">
+      <Filter>CryptoWrappers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
