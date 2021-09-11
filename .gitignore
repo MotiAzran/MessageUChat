@@ -39,3 +39,10 @@
 */Release/
 */x64/
 *.vcxproj.user
+cryptopp_wrapper
+cryptopp850/TestData
+cryptopp850/TestPrograms
+cryptopp850/TestVectors
+cryptopp850/Win32
+cryptopp850/x64
+*.zip
