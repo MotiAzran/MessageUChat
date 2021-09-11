@@ -9,6 +9,9 @@ SocketStream::SocketStream(SOCKET sock) :
 	}
 }
 
+SocketStream::SocketStream(const Host& host) :
+	SocketStream(_connect_to_host(host)) {}
+
 SocketStream::~SocketStream()
 {
 	try
@@ -63,4 +66,25 @@ void SocketStream::write(const Buffer& buf)
 	{
 		throw std::exception("Send data failed");
 	}
+}
+
+SOCKET SocketStream::_connect_to_host(const Host& host)
+{
+	SOCKET sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (INVALID_SOCKET == sock)
+	{
+		throw std::exception("socket initilaization error");
+	}
+
+	struct sockaddr_in sock_addr = { 0 };
+	sock_addr.sin_family = AF_INET;
+	sock_addr.sin_port = htons(std::get<Port>(host));
+	sock_addr.sin_addr.s_addr = std::get<IPAddress>(host).get_ip();
+
+	if (SOCKET_ERROR == ::connect(sock, reinterpret_cast<const sockaddr*>(&sock_addr), sizeof(sock_addr)))
+	{
+		throw std::exception("Server unreachable");
+	}
+
+	return sock;
 }
