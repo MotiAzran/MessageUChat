@@ -1,8 +1,6 @@
+import ServerDatabase
 import datetime
 import uuid
-
-import ServerDatabase
-from Common import DATABASE_PATH
 
 
 class User(object):
@@ -38,4 +36,4 @@ class User(object):
         if ServerDatabase.is_user_name_exists(name):
             raise ValueError("User name exists")
 
-        return cls(uuid.uuid1(), name, public_key, datetime.datetime.now())
+        return cls(uuid.uuid4().hex, name, public_key, datetime.datetime.now())
