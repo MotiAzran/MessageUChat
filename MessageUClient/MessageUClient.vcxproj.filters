@@ -26,6 +26,10 @@
     <ClCompile Include="RSAWrapper.cpp">
       <Filter>CryptoWrappers</Filter>
     </ClCompile>
+    <ClCompile Include="MessageUClient.cpp" />
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Network">
@@ -71,6 +75,10 @@
     </ClInclude>
     <ClInclude Include="RSAWrapper.h">
       <Filter>CryptoWrappers</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageUClient.h" />
+    <ClInclude Include="StringUtils.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
