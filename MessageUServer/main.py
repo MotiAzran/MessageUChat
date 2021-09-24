@@ -1,10 +1,16 @@
+import ClientThread
+import ServerDatabase
 from NetworkUtils import validate_port
 from Common import *
+import socket
 
 
 class MessageUServer(object):
     def __init__(self):
-        self._server_host = (SERVER_IP, self.get_server_port())
+        self._host = (SERVER_IP, self.get_server_port())
+        self._sock = self.initialize_server(self._host)
+
+        ServerDatabase.initialize_database()
 
     @staticmethod
     def get_server_port():
@@ -16,9 +22,23 @@ class MessageUServer(object):
 
         return int(data)
 
+    @staticmethod
+    def initialize_server(host):
+        sock = socket.socket()
+        sock.bind(host)
+        sock.listen(5)
+
+        return sock
+
+    def serve(self):
+        while True:
+            sock, _ = self._sock.accept()
+            ClientThread.ClientThread(sock).start()
+
 
 def main():
     server = MessageUServer()
+    server.serve()
 
 
 if __name__ == '__main__':
