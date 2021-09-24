@@ -18,7 +18,7 @@ class User(object):
 
     @property
     def identifier(self):
-        return self._id
+        return self._id.bytes
 
     @property
     def public_key(self):
@@ -36,4 +36,4 @@ class User(object):
         if ServerDatabase.is_user_name_exists(name):
             raise ValueError("User name exists")
 
-        return cls(uuid.uuid4().hex, name, public_key, datetime.datetime.now())
+        return cls(uuid.uuid4(), name, public_key, datetime.datetime.now())

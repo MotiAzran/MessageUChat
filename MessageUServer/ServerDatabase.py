@@ -2,6 +2,9 @@ from Common import DATABASE_PATH
 import Message
 import sqlite3
 
+CLIENTS_TABLE_NAME = "Clients"
+MESSAGES_TABLE_NAME = "Messages"
+
 
 def _execute_command(*args, **kwargs):
     """
@@ -22,20 +25,29 @@ def _execute_commands(commands):
             c.execute(command)
 
 
+def _is_table_exists(table_name):
+    output = _execute_command("""SELECT name FROM sqlite_master WHERE type='table' AND name=?""", (table_name,))
+    return output.fetchone() is not None
+
+
 def initialize_database():
-    create_clients_table_command = '''CREATE TABLE Clients (ID INT PRIMARY KEY,
-        Name TEXT UNIQUE,
-        PublicKey TEXT NOT NULL,
-        LastSeen TIMESTAMP);'''
+    commands = []
+    if not _is_table_exists(CLIENTS_TABLE_NAME):
+        commands.append(f'''CREATE TABLE {CLIENTS_TABLE_NAME}(ID INT PRIMARY KEY,
+            Name TEXT UNIQUE,
+            PublicKey TEXT NOT NULL,
+            LastSeen TIMESTAMP);''')
 
-    create_messages_table_command = '''CREATE TABLE Messages(ID INT PRIMARY KEY,
-        ToClient INT,
-        FromClient INT,
-        Type int,
-        Content BLOB NOT NULL,
-        FOREIGN KEY (ToClient, FromClient) REFERENCES Clients (ID, ID));'''
+    if not _is_table_exists(MESSAGES_TABLE_NAME):
+        commands.append(f'''CREATE TABLE {MESSAGES_TABLE_NAME}(ID INT PRIMARY KEY,
+            ToClient INT,
+            FromClient INT,
+            Type int,
+            Content BLOB NOT NULL,
+            FOREIGN KEY (ToClient, FromClient) REFERENCES Clients (ID, ID));''')
 
-    _execute_commands((create_clients_table_command, create_messages_table_command))
+    if commands != []:
+        _execute_commands(commands)
 
 
 def is_user_name_exists(name):
