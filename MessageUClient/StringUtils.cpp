@@ -1,4 +1,6 @@
 #include <algorithm>
+#include "HexWrapper.h"
+#include "Common.h"
 #include "StringUtils.h"
 
 bool StringUtils::is_number(const std::string& str)
@@ -8,23 +10,29 @@ bool StringUtils::is_number(const std::string& str)
 		return false;
 	}
 
-	return std::all_of(str.cbegin(), str.cend(), std::isdigit);
+	return std::all_of(str.begin(), str.end(), [](const char c) { return '0' <= c && c <= '9'; });
 }
 
-std::vector<std::string> StringUtils::split(const std::string& str, const char sep)
+Types::ClientID StringUtils::to_client_id(const std::string& str)
 {
-	std::vector<std::string> splited;
-
-	int last_idx = 0;
-	for (auto idx = str.find(sep);
-		str.npos != idx;
-		idx = str.find(sep, idx + 1))
+	if (Common::CLIENT_IDENTIFIER_STR_LENGTH == str.size())
 	{
-		splited.push_back(str.substr(last_idx, (idx - last_idx)));
-		last_idx = idx + 1;
+		auto decoded = HexWrapper::decode(str);
+
+		return Types::ClientID(to_array<Common::CLIENT_IDENTIFIER_SIZE_BYTES>(decoded));
 	}
+	else if (Common::CLIENT_IDENTIFIER_SIZE_BYTES == str.size())
+	{
+		return Types::ClientID(to_array<Common::CLIENT_IDENTIFIER_SIZE_BYTES>(str));
+	}
+	
+	throw std::exception("Invalid client id");
+}
 
-	splited.push_back(str.substr(last_idx));
+std::string StringUtils::to_string(const Types::ClientID& id)
+{
+	std::string id_str(id.size(), 0);
+	CopyMemory(id_str.data(), id.data(), id.size());
 
-	return splited;
+	return id_str;
 }

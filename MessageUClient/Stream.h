@@ -1,10 +1,10 @@
 #pragma once
 
-#include "BufferUtils.h"
+#include <string>
 
 class Stream
 {
 public:
-	virtual Buffer read(const uint32_t size) = 0;
-	virtual void write(const Buffer& buf) = 0;
+	virtual std::string read(const uint32_t size) = 0;
+	virtual void write(const std::string& buf) = 0;
 };

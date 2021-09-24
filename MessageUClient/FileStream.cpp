@@ -18,7 +18,7 @@ FileStream::FileStream(const std::filesystem::path& path) :
 FileStream::FileStream(const std::string& path) :
 	FileStream(std::filesystem::path(path)) {}
 
-Buffer FileStream::read(const uint32_t size)
+std::string FileStream::read(const uint32_t size)
 {
 	// Validate file still opened
 	if (!_ifile.is_open() || !_ofile.is_open())
@@ -28,13 +28,13 @@ Buffer FileStream::read(const uint32_t size)
 
 	if (0 == size)
 	{
-		return Buffer();
+		return std::string();
 	}
 
 	// Set size to read, the minimum from the given size to the file size
 	auto file_size = get_file_size();
 	uint32_t size_to_read = std::min(size, file_size);
-	Buffer buf(size_to_read, 0);
+	std::string buf(size_to_read, 0);
 
 	// Read from the file
 	_ifile.read(reinterpret_cast<char*>(buf.data()), size_to_read);
@@ -42,7 +42,7 @@ Buffer FileStream::read(const uint32_t size)
 	return buf;
 }
 
-void FileStream::write(const Buffer& buf)
+void FileStream::write(const std::string& data)
 {
 	// Validate the file still opened
 	if (!_ifile.is_open() || !_ofile.is_open())
@@ -51,12 +51,7 @@ void FileStream::write(const Buffer& buf)
 	}
 
 	// Write buffer to the file
-	_ofile.write(reinterpret_cast<const char*>(buf.data()), buf.size());
-}
-
-void FileStream::write(const std::string& str)
-{
-	write(BufferUtils::string_to_buffer(str));
+	_ofile.write(reinterpret_cast<const char*>(data.data()), data.size());
 }
 
 void FileStream::flush()

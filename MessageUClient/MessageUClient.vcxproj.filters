@@ -14,9 +14,6 @@
     <ClCompile Include="SocketStream.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
-    <ClCompile Include="BufferUtils.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="AESWrapper.cpp">
       <Filter>CryptoWrappers</Filter>
     </ClCompile>
@@ -26,9 +23,32 @@
     <ClCompile Include="RSAWrapper.cpp">
       <Filter>CryptoWrappers</Filter>
     </ClCompile>
-    <ClCompile Include="MessageUClient.cpp" />
+    <ClCompile Include="Client.cpp">
+      <Filter>Client</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="ExitAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer.cpp">
+      <Filter>Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="HexWrapper.cpp">
+      <Filter>CryptoWrappers</Filter>
+    </ClCompile>
     <ClCompile Include="StringUtils.cpp">
-      <Filter>Common</Filter>
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ProtocolUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientsListAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageUMenu.cpp">
+      <Filter>Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +63,21 @@
     </Filter>
     <Filter Include="CryptoWrappers">
       <UniqueIdentifier>{19f7e10b-2b84-4b46-a15b-1fa36ff058ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client">
+      <UniqueIdentifier>{478df615-dfd2-4beb-a057-cf081f23f25c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actions">
+      <UniqueIdentifier>{8830ebe9-e1e5-4169-9a0b-f84b64713177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serializer">
+      <UniqueIdentifier>{77ab131f-f073-408d-8199-785242dd75b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{51a8264d-1a34-4a78-af52-3699e47666e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu">
+      <UniqueIdentifier>{08aea7d3-4d78-4867-8900-291e50657cc4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,9 +96,6 @@
     <ClInclude Include="Stream.h">
       <Filter>Stream</Filter>
     </ClInclude>
-    <ClInclude Include="BufferUtils.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -76,8 +108,46 @@
     <ClInclude Include="RSAWrapper.h">
       <Filter>CryptoWrappers</Filter>
     </ClInclude>
-    <ClInclude Include="MessageUClient.h" />
+    <ClInclude Include="IAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionFactory.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Client</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="HexWrapper.h">
+      <Filter>CryptoWrappers</Filter>
+    </ClInclude>
     <ClInclude Include="StringUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtocolUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitException.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientsListAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageUMenu.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtocolCommon.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

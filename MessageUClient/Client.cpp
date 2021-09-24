@@ -1,51 +1,53 @@
+#include <sstream>
 #include "FileStream.h"
-#include "BufferUtils.h"
 #include "StringUtils.h"
+#include "Base64Wrapper.h"
 #include "Client.h"
 
-Client Client::client_from_file()
+std::string decode_private_key(const std::string& encoded_private_key)
 {
-	enum class SplitedIndex : int
-	{
-		Name = 1,
-		Identifier,
-		PrivKey,
+	return Base64Wrapper::decode(encoded_private_key);
+}
 
-		// Must be last
-		Count
-	};
-
-	FileStream client_info(Common::CLIENT_INFO_PATH);
-	auto info = BufferUtils::buffer_to_string(client_info.read(client_info.get_file_size()));
+Client* Client::client_from_file(FileStream& info_file)
+{
+	auto info = info_file.read(info_file.get_file_size());
 	if (info.empty())
 	{
 		throw std::exception("Client info not found");
 	}
+	
+	std::stringstream info_stream(info);
 
-	auto splited = StringUtils::split(info, '\n');
-	if (static_cast<int>(SplitedIndex::Count) != splited.size())
-	{
-		throw std::exception("Invalid client info file format");
-	}
-
-	auto name = splited[static_cast<int>(SplitedIndex::Name)];
+	// Get name from file first line
+	std::string name;
+	std::getline(info_stream, name);
 	if (name.size() > Common::MAX_USER_NAME_LENGTH)
 	{
 		throw std::exception("Invalid file name");
 	}
 
-	auto identifier = splited[static_cast<int>(SplitedIndex::Identifier)];
-	if (identifier.size() != Common::USER_IDENTIFIER_LENGTH)
+	// Get client ID from file second line
+	std::string identifier;
+	std::getline(info_stream, identifier);
+	if (identifier.size() != Common::CLIENT_IDENTIFIER_STR_LENGTH)
 	{
 		throw std::exception("Invalid user indentifier");
 	}
 
-	auto private_key = splited[static_cast<int>(SplitedIndex::PrivKey)];
+	// Get private key from the rest of the file
+	std::string encoded_private_key(std::istreambuf_iterator<char>(info_stream), {});
+	auto private_key = decode_private_key(encoded_private_key);
 
-	return Client(name, identifier, private_key);
+	return new Client(name, StringUtils::to_client_id(identifier), private_key);
 }
 
-Client::Client(const std::string& name, const std::string& identifier, const std::string& private_key) :
+Client* Client::client_from_file(FileStream&& info_file)
+{
+	return Client::client_from_file(info_file);
+}
+
+Client::Client(const std::string& name, const Types::ClientID& identifier, const std::string& private_key) :
 	_name(name),
 	_identifier(identifier),
-	_private_key(private_key) {}
+	_private_key(RSAPrivateWrapper(private_key)) {}

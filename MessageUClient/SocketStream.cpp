@@ -38,14 +38,14 @@ SocketStream& SocketStream::operator=(SocketStream&& other) noexcept
 	return *this;
 }
 
-Buffer SocketStream::read(const uint32_t size)
+std::string SocketStream::read(const uint32_t size)
 {
 	if (0 == size)
 	{
-		return Buffer();
+		return std::string();
 	}
 
-	Buffer buf(size, 0);
+	std::string buf(size, 0);
 
 	if (SOCKET_ERROR == ::recv(_sock, reinterpret_cast<char*>(buf.data()), size, MSG_WAITALL))
 	{
@@ -55,14 +55,14 @@ Buffer SocketStream::read(const uint32_t size)
 	return buf;
 }
 
-void SocketStream::write(const Buffer& buf)
+void SocketStream::write(const std::string& data)
 {
-	if (buf.empty())
+	if (data.empty())
 	{
 		throw std::exception("Can't send empty buffer");
 	}
 
-	if (SOCKET_ERROR == ::send(_sock, reinterpret_cast<const char*>(buf.data()), buf.size(), 0))
+	if (SOCKET_ERROR == ::send(_sock, reinterpret_cast<const char*>(data.data()), data.size(), 0))
 	{
 		throw std::exception("Send data failed");
 	}
@@ -78,7 +78,7 @@ SOCKET SocketStream::_connect_to_host(const Host& host)
 
 	struct sockaddr_in sock_addr = { 0 };
 	sock_addr.sin_family = AF_INET;
-	sock_addr.sin_port = htons(std::get<Port>(host));
+	sock_addr.sin_port = htons(std::get<Types::Port>(host));
 	sock_addr.sin_addr.s_addr = std::get<IPAddress>(host).get_ip();
 
 	if (SOCKET_ERROR == ::connect(sock, reinterpret_cast<const sockaddr*>(&sock_addr), sizeof(sock_addr)))
