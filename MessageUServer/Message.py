@@ -15,7 +15,7 @@ class Message(object):
     message_counter = 0
 
     def __init__(self, id_, to_id, from_id, message_type, content):
-        if not ServerDatabase.is_user_id_exists(to_id) or not ServerDatabase.is_user_id_exists(from_id):
+        if not ServerDatabase.is_client_id_exists(to_id) or not ServerDatabase.is_client_id_exists(from_id):
             raise ValueError("User not exists")
 
         if not isinstance(message_type, MessageType):

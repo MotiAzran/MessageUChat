@@ -3,8 +3,8 @@ import datetime
 import uuid
 
 
-class User(object):
-    MAX_USER_NAME = 254
+class Client(object):
+    MAX_USER_NAME = 255
 
     def __init__(self, id_, name, public_key, last_seen):
         self._id = id_
@@ -18,7 +18,7 @@ class User(object):
 
     @property
     def identifier(self):
-        return self._id.bytes
+        return self._id
 
     @property
     def public_key(self):
@@ -33,7 +33,7 @@ class User(object):
         if len(name) > cls.MAX_USER_NAME:
             raise ValueError("User name too long")
 
-        if ServerDatabase.is_user_name_exists(name):
+        if ServerDatabase.is_client_name_exists(name):
             raise ValueError("User name exists")
 
-        return cls(uuid.uuid4(), name, public_key, datetime.datetime.now())
+        return cls(uuid.uuid4().bytes_le, name, public_key, datetime.datetime.now())

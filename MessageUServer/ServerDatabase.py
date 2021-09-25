@@ -1,3 +1,4 @@
+import Client
 from Common import DATABASE_PATH
 import Message
 import sqlite3
@@ -50,37 +51,42 @@ def initialize_database():
         _execute_commands(commands)
 
 
-def is_user_name_exists(name):
-    output = _execute_command('SELECT Name FROM Clients WHERE Name=?', [name])
+def is_client_name_exists(name):
+    output = _execute_command(f'SELECT Name FROM {CLIENTS_TABLE_NAME} WHERE Name=?', [name])
     return output.fetchone() is not None
 
 
-def is_user_id_exists(id_):
-    output = _execute_command('SELECT ID FROM Clients WHERE ID=?', [id_])
+def is_client_id_exists(id_):
+    output = _execute_command(f'SELECT ID FROM {CLIENTS_TABLE_NAME} WHERE ID=?', [id_])
     return output.fetchone() is not None
 
 
-def register_user(user):
-    _execute_command('''INSERT INTO Clients VALUES (?, ?, ?, ?)''',
+def register_client(user):
+    _execute_command(f'''INSERT INTO {CLIENTS_TABLE_NAME} VALUES (?, ?, ?, ?)''',
                      (user.identifier, user.name, user.public_key, user.last_seen))
 
 
-def users_list():
-    output = _execute_command('''SELECT ID, Name FROM Clients''')
-    user = output.fetchone()
-    while user is not None:
-        yield user
-        user = output.fetchone()
+def clients_count():
+    output = _execute_command(f'SELECT COUNT(ID) FROM {CLIENTS_TABLE_NAME}')
+    return output.fetchone()[0]
+
+
+def clients_list():
+    output = _execute_command(f'SELECT ID, Name, PublicKey, LastSeen FROM {CLIENTS_TABLE_NAME}')
+    client = output.fetchone()
+    while client is not None:
+        yield Client.Client(*client)
+        client = output.fetchone()
 
 
 def add_message(message):
-    _execute_command('''INSERT INTO Messages VALUES (?, ?, ?, ?, ?)''',
+    _execute_command(f'''INSERT INTO {MESSAGES_TABLE_NAME} VALUES (?, ?, ?, ?, ?)''',
                      (message.identifier, message.to_client_id, message.from_client_id,
                       message.message_type, message.content))
 
 
-def get_user_waiting_messages(user):
-    output = _execute_command('''SELECT * FROM Messages WHERE ToClient=?''', [user.identifier])
+def get_client_waiting_messages(user):
+    output = _execute_command(f'''SELECT * FROM {MESSAGES_TABLE_NAME} WHERE ToClient=?''', [user.identifier])
     message = output.fetchone()
     while message is not None:
         message_id, to_client, from_client, message_type, content = message
