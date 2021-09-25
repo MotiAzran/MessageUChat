@@ -55,7 +55,7 @@ void MessageUMenu::add_client_id(const std::string& name, const Types::ClientID&
 
 Types::ClientID MessageUMenu::get_client_id(const std::string& name) const
 {
-	if (_name_to_id.find(name) == _name_to_id.cend())
+	if (_name_to_id.find(name) == _name_to_id.end())
 	{
 		throw std::exception("Client not exists");
 	}
@@ -65,7 +65,7 @@ Types::ClientID MessageUMenu::get_client_id(const std::string& name) const
 
 std::string MessageUMenu::get_public_key(const Types::ClientID& id) const
 {
-	if (_id_to_pubkey.find(id) == _id_to_pubkey.cend())
+	if (_id_to_pubkey.find(id) == _id_to_pubkey.end())
 	{
 		throw std::exception("Client not exists");
 	}

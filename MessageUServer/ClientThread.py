@@ -8,7 +8,8 @@ class ClientThread(Thread):
         super().__init__()
         self._sock = sock
 
-        self._handlers = {1000: register_handler, 1001: send_clients_list}
+        self._handlers = {1000: register_handler, 1001: send_clients_list,
+                          1002: send_public_key}
 
     def _get_request_header(self):
         REQUEST_HEADER_PATTERN = "<16sBHL"

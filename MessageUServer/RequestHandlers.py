@@ -53,3 +53,19 @@ def send_clients_list(sock, client_id, payload_size):
 
         sock.sendall(client.identifier)
         sock.sendall(client.name.ljust(Client.MAX_USER_NAME, '\0').encode())
+
+
+def send_public_key(sock, client_id, payload_size):
+    SEND_PUBLIC_KEY_CODE = 2002
+    REQUEST_PAYLOAD_PATTERN = "<16s"
+    RESPONSE_PAYLOAD_PATTERN = "<16s160s"
+
+    if payload_size != struct.calcsize(REQUEST_PAYLOAD_PATTERN):
+        raise Exception("Got invalid payload")
+
+    requested_client_id = struct.unpack(REQUEST_PAYLOAD_PATTERN, sock.recv(payload_size))[0]
+
+    public_key = ServerDatabase.get_client_public_key(requested_client_id)
+    _send_response_header(sock, SEND_PUBLIC_KEY_CODE, struct.calcsize(RESPONSE_PAYLOAD_PATTERN))
+    sock.sendall(requested_client_id)
+    sock.sendall(public_key)

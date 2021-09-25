@@ -34,6 +34,7 @@ void ClientsListAction::_handle_response(MessageUMenu& menu, SocketStream& sock)
 	{
 		auto id = StringUtils::to_client_id(sock.read(Common::CLIENT_IDENTIFIER_SIZE_BYTES));
 		auto name = sock.read(Common::MAX_CLIENT_NAME_LENGTH);
+		name.erase(name.find('\0'));
 		std::cout << "- " << name << std::endl;
 
 		menu.add_client_id(name, id);

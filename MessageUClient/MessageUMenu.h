@@ -9,6 +9,7 @@
 // Actions
 #include "RegisterAction.h"
 #include "ClientsListAction.h"
+#include "GetPublicKeyAction.h"
 #include "ExitAction.h"
 
 class MessageUMenu
@@ -38,6 +39,7 @@ private:
 	std::unordered_map<int, IActionFactory*> _actions_factory = {
 		{10, new ActionFactory<RegisterAction>},
 		{20, new ActionFactory<ClientsListAction>},
+		{30, new ActionFactory<GetPublicKeyAction>},
 		{0, new ActionFactory<ExitAction>}
 	};
 

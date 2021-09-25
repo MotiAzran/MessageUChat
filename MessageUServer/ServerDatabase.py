@@ -12,6 +12,7 @@ def _execute_command(*args, **kwargs):
     Execute command and return command output
     """
     with sqlite3.connect(DATABASE_PATH) as db:
+        db.row_factory = sqlite3.Row
         c = db.cursor()
         return c.execute(*args, **kwargs)
 
@@ -27,8 +28,8 @@ def _execute_commands(commands):
 
 
 def _is_table_exists(table_name):
-    output = _execute_command("""SELECT name FROM sqlite_master WHERE type='table' AND name=?""", (table_name,))
-    return output.fetchone() is not None
+    cursor = _execute_command("""SELECT name FROM sqlite_master WHERE type='table' AND name=?""", (table_name,))
+    return cursor.fetchone() is not None
 
 
 def initialize_database():
@@ -52,13 +53,13 @@ def initialize_database():
 
 
 def is_client_name_exists(name):
-    output = _execute_command(f'SELECT Name FROM {CLIENTS_TABLE_NAME} WHERE Name=?', [name])
-    return output.fetchone() is not None
+    cursor = _execute_command(f'SELECT Name FROM {CLIENTS_TABLE_NAME} WHERE Name=?', [name])
+    return cursor.fetchone() is not None
 
 
 def is_client_id_exists(id_):
-    output = _execute_command(f'SELECT ID FROM {CLIENTS_TABLE_NAME} WHERE ID=?', [id_])
-    return output.fetchone() is not None
+    cursor = _execute_command(f'SELECT ID FROM {CLIENTS_TABLE_NAME} WHERE ID=?', [id_])
+    return cursor.fetchone() is not None
 
 
 def register_client(user):
@@ -67,16 +68,21 @@ def register_client(user):
 
 
 def clients_count():
-    output = _execute_command(f'SELECT COUNT(ID) FROM {CLIENTS_TABLE_NAME}')
-    return output.fetchone()[0]
+    cursor = _execute_command(f'SELECT COUNT(ID) AS CNT FROM {CLIENTS_TABLE_NAME}')
+    return cursor.fetchone()["CNT"]
 
 
 def clients_list():
-    output = _execute_command(f'SELECT ID, Name, PublicKey, LastSeen FROM {CLIENTS_TABLE_NAME}')
-    client = output.fetchone()
-    while client is not None:
-        yield Client.Client(*client)
-        client = output.fetchone()
+    cursor = _execute_command(f'SELECT * FROM {CLIENTS_TABLE_NAME}')
+    row = cursor.fetchone()
+    while row is not None:
+        yield Client.Client(row["ID"], row["Name"], row["PublicKey"], row["LastSeen"])
+        row = cursor.fetchone()
+
+
+def get_client_public_key(client_id):
+    cursor = _execute_command(f'SELECT ID, PublicKey FROM {CLIENTS_TABLE_NAME} WHERE ID=?', [client_id])
+    return cursor.fetchone()["PublicKey"]
 
 
 def add_message(message):
@@ -86,8 +92,8 @@ def add_message(message):
 
 
 def get_client_waiting_messages(user):
-    output = _execute_command(f'''SELECT * FROM {MESSAGES_TABLE_NAME} WHERE ToClient=?''', [user.identifier])
-    message = output.fetchone()
-    while message is not None:
-        message_id, to_client, from_client, message_type, content = message
-        yield Message.Message(message_id, to_client, from_client, Message.MessageType(message_type), content)
+    cursor = _execute_command(f'''SELECT * FROM {MESSAGES_TABLE_NAME} WHERE ToClient=?''', [user.identifier])
+    row = cursor.fetchone()
+    while row is not None:
+        yield Message.Message(row["ID"], row["ToClient"], row["FromClient"],
+                              Message.MessageType(row["Type"]), row["Content"])
