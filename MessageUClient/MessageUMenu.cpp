@@ -29,7 +29,7 @@ void MessageUMenu::print_menu()
 {
 	for (auto& [menu_index, factory] : _actions_factory)
 	{
-		std::cout << menu_index << ") " << factory->get_menu_name() << std::endl;
+		std::cout << std::setw(2) << menu_index << ") " << factory->get_menu_name() << std::endl;
 	}
 }
 
@@ -44,6 +44,11 @@ void MessageUMenu::handle_choice(const int choice)
 	auto handler = _actions_factory.at(choice)->create();
 
 	handler->execute(*this);
+}
+
+void MessageUMenu::add_client_id(const std::string& name, const Types::ClientID& id)
+{
+	_name_to_id[name] = id;
 }
 
 Types::Host MessageUMenu::_get_server_host_from_file()

@@ -25,6 +25,8 @@ public:
 	Client* get_client() { return _client; }
 	void set_client(Client* client) { _client = client; }
 
+	void add_client_id(const std::string& name, const Types::ClientID& id);
+
 private:
 	static Types::Host _get_server_host_from_file();
 	static Client* _get_client_from_file();
@@ -38,4 +40,5 @@ private:
 private:
 	Types::Host _server_host;
 	Client* _client;
+	std::map<std::string, Types::ClientID> _name_to_id;
 };

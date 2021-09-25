@@ -22,7 +22,7 @@ Client* Client::client_from_file(FileStream& info_file)
 	// Get name from file first line
 	std::string name;
 	std::getline(info_stream, name);
-	if (name.size() > Common::MAX_USER_NAME_LENGTH)
+	if (name.size() > Common::MAX_CLIENT_NAME_LENGTH)
 	{
 		throw std::exception("Invalid file name");
 	}

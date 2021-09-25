@@ -16,6 +16,6 @@ public:
 	virtual void execute(MessageUMenu& menu) override;
 
 private:
-	Types::ClientID _get_response();
+	void _handle_response(MessageUMenu& menu, SocketStream& sock);
 };
 

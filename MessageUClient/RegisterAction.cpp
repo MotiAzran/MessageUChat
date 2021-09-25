@@ -19,10 +19,10 @@ void RegisterAction::execute(MessageUMenu& menu)
 		throw std::exception("You already registered");
 	}
 
-	char username[Common::MAX_USER_NAME_LENGTH];
+	char username[Common::MAX_CLIENT_NAME_LENGTH];
 	std::cout << "Enter user name: ";
 	std::cin.ignore();
-	std::cin.getline(username, Common::MAX_USER_NAME_LENGTH);
+	std::cin.getline(username, Common::MAX_CLIENT_NAME_LENGTH);
 
 	// Create new client rsa key pair
 	RSAPrivateWrapper rsapriv;
@@ -54,7 +54,7 @@ void RegisterAction::_send_request(SocketStream& sock, const std::string& userna
 
 	// Add username and public key to payload
 	std::string padded_username(username);
-	padded_username.resize(Common::MAX_USER_NAME_LENGTH);
+	padded_username.resize(Common::MAX_CLIENT_NAME_LENGTH);
 	payload.add(padded_username, rsapriv.getPublicKey());
 
 	// Send request

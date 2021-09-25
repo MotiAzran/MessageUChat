@@ -7,7 +7,7 @@ namespace Protocol
 	enum class RequestCode : uint16_t
 	{
 		Register = 1000,
-		UsersList,
+		ClientsList,
 		PublicKeyRequest,
 		SendMessageToUser,
 		WaitingMessagesRequest,
@@ -16,7 +16,7 @@ namespace Protocol
 	enum class ResponseCode : uint16_t
 	{
 		RegisterSuccess = 2000,
-		UsersListSent,
+		ClientsListSent,
 		PublicKeySent,
 		MessageSentToUser,
 		WaitingMessagesReceived,
