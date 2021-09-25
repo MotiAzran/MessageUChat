@@ -1,4 +1,4 @@
-#include "ExitException.h"
+#include "Exceptions.h"
 #include "ExitAction.h"
 
 const std::string ExitAction::MENU_NAME = "Exit client";

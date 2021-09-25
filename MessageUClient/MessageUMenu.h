@@ -26,6 +26,10 @@ public:
 	void set_client(Client* client) { _client = client; }
 
 	void add_client_id(const std::string& name, const Types::ClientID& id);
+	Types::ClientID get_client_id(const std::string& name) const;
+
+	void add_public_key(const Types::ClientID& id, const std::string& public_key) { _id_to_pubkey[id] = public_key; }
+	std::string get_public_key(const Types::ClientID& id) const;
 
 private:
 	static Types::Host _get_server_host_from_file();
@@ -41,4 +45,5 @@ private:
 	Types::Host _server_host;
 	Client* _client;
 	std::map<std::string, Types::ClientID> _name_to_id;
+	std::map<Types::ClientID, std::string> _id_to_pubkey;
 };

@@ -37,18 +37,40 @@ void MessageUMenu::handle_choice(const int choice)
 {
 	if (_actions_factory.find(choice) == _actions_factory.cend())
 	{
-		std::cout << "Invalid choice" << std::endl;
+		std::cout << "Invalid choice" << std::endl << std::endl;
 		return;
 	}
 
 	auto handler = _actions_factory.at(choice)->create();
 
+	std::cout << std::endl;
 	handler->execute(*this);
+	std::cout << std::endl;
 }
 
 void MessageUMenu::add_client_id(const std::string& name, const Types::ClientID& id)
 {
 	_name_to_id[name] = id;
+}
+
+Types::ClientID MessageUMenu::get_client_id(const std::string& name) const
+{
+	if (_name_to_id.find(name) == _name_to_id.cend())
+	{
+		throw std::exception("Client not exists");
+	}
+
+	return _name_to_id.at(name);
+}
+
+std::string MessageUMenu::get_public_key(const Types::ClientID& id) const
+{
+	if (_id_to_pubkey.find(id) == _id_to_pubkey.cend())
+	{
+		throw std::exception("Client not exists");
+	}
+
+	return _id_to_pubkey.at(id);
 }
 
 Types::Host MessageUMenu::_get_server_host_from_file()

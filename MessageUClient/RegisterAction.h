@@ -4,8 +4,6 @@
 #include "IAction.h"
 #include "RSAWrapper.h"
 
-using Types::Host;
-
 class RegisterAction : public IAction
 {
 public:

@@ -19,7 +19,7 @@ namespace Common
 	const auto MAX_PORT = 0xffff;
 
 	const auto MAX_CLIENT_NAME_LENGTH = 255;
-	const auto PUBLIC_KEY_LENGTH = 160;
+	const auto PUBLIC_KEY_SIZE = 160;
 	const auto CLIENT_IDENTIFIER_STR_LENGTH = 32;
 	const auto CLIENT_IDENTIFIER_SIZE_BYTES = 16;
 

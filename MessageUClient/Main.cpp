@@ -1,7 +1,7 @@
 #include <iostream>
 #include "AutoWSA.h"
 #include "MessageUMenu.h"
-#include "ExitException.h"
+#include "Exceptions.h"
 
 int main()
 {

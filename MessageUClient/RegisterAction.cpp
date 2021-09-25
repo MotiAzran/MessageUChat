@@ -8,6 +8,7 @@
 #include "HexWrapper.h"
 #include "Base64Wrapper.h"
 #include "ProtocolUtils.h"
+#include "Exceptions.h"
 #include "RegisterAction.h"
 
 const std::string RegisterAction::MENU_NAME = "Register";
@@ -19,21 +20,21 @@ void RegisterAction::execute(MessageUMenu& menu)
 		throw std::exception("You already registered");
 	}
 
-	char username[Common::MAX_CLIENT_NAME_LENGTH];
-	std::cout << "Enter user name: ";
+	char client_name[Common::MAX_CLIENT_NAME_LENGTH];
+	std::cout << "Enter client name: ";
 	std::cin.ignore();
-	std::cin.getline(username, Common::MAX_CLIENT_NAME_LENGTH);
+	std::cin.getline(client_name, Common::MAX_CLIENT_NAME_LENGTH);
 
 	// Create new client rsa key pair
 	RSAPrivateWrapper rsapriv;
 
-	// Create connection with the client
+	// Create connection with the server
 	SocketStream sock(menu.get_server_host());
-	_send_request(sock, username, rsapriv);
+	_send_request(sock, client_name, rsapriv);
 	
 	auto client_id = _get_response(sock);
 
-	_write_client_info(username, client_id, rsapriv);
+	_write_client_info(client_name, client_id, rsapriv);
 
 	menu.set_client(Client::client_from_file(FileStream(Common::CLIENT_INFO_FILE_PATH)));
 }
@@ -66,9 +67,10 @@ Types::ClientID RegisterAction::_get_response(SocketStream& sock)
 {
 	// Read response header
 	auto header = Protocol::Utils::get_response_header(sock);
-	if (Protocol::ResponseCode::RegisterSuccess != header.code)
+	if (Protocol::ResponseCode::RegisterSuccess != header.code ||
+		Common::CLIENT_IDENTIFIER_SIZE_BYTES != header.payload_size)
 	{
-		throw std::exception("Registration failed");
+		throw ServerErrorException();
 	}
 
 	auto payload = sock.read(header.payload_size);
