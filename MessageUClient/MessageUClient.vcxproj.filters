@@ -50,6 +50,15 @@
     <ClCompile Include="MessageUMenu.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="GetPublicKeyAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="RSAStream.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="AESStream.cpp">
+      <Filter>Stream</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Network">
@@ -135,9 +144,6 @@
     <ClInclude Include="ProtocolUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="ExitException.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="ClientsListAction.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -149,6 +155,18 @@
     </ClInclude>
     <ClInclude Include="ProtocolCommon.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GetPublicKeyAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="RSAStream.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="AESStream.h">
+      <Filter>Stream</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

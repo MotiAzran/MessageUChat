@@ -8,17 +8,18 @@ class AESWrapper
 public:
 	static const unsigned int DEFAULT_KEYLENGTH = 16;
 private:
-	unsigned char _key[DEFAULT_KEYLENGTH];
+	std::string _key;
 	AESWrapper(const AESWrapper& aes);
+
 public:
-	static unsigned char* GenerateKey(unsigned char* buffer, unsigned int length);
+	static std::string GenerateKey(unsigned int length=DEFAULT_KEYLENGTH);
 
 	AESWrapper();
-	AESWrapper(const unsigned char* key, unsigned int size);
-	~AESWrapper();
+	AESWrapper(const std::string& key);
+	virtual ~AESWrapper() = default;
 
-	const unsigned char* getKey() const;
+	std::string getKey() const { return _key; }
 
-	std::string encrypt(const char* plain, unsigned int length);
-	std::string decrypt(const char* cipher, unsigned int length);
+	std::string encrypt(const std::string& plain);
+	std::string decrypt(const std::string& cipher);
 };
