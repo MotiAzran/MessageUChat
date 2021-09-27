@@ -96,9 +96,6 @@ void Client::get_client_public_key(const Types::Host& host)
 		throw ServerErrorException();
 	}
 
-	FileStream f(std::string("spub.bin"));
-	f.write(StringUtils::to_string(response.public_key));
-
 	_clients.update(client.id, response.public_key);
 }
 
@@ -121,35 +118,25 @@ void Client::get_waiting_messages(const Types::Host& host)
 		std::cout << "Content:\n";
 		try
 		{
-			FileStream f(std::string("kpub.bin"));
 			switch (message.message_type)
 			{
 			case Protocol::MessageType::SendSymetricKey:
-				std::cout << "Symetric key received";
-				f.write(_rsapriv.getPublicKey());
 				_clients.update(message.client_id, StringUtils::to_aes_key(_rsapriv.decrypt(message.message_content)));
+				std::cout << "Symetric key received";
 				break;
 			case Protocol::MessageType::SymetricKeyRequest:
 				std::cout << "Request for symetric key";
-				// TODO: Send symetric key?
 				break;
 			case Protocol::MessageType::Text:
-				if (!_clients.has_val<Types::AESKey>(message.client_id))
-				{
-					std::cout << "Can't decrypt message";
-				}
-				else
-				{
-					std::cout << _aes.decrypt(message.message_content);
-				}
+				std::cout << _aes.decrypt(message.message_content);
 				break;
 			default:
-				std::cout << "Invalid message";
+				std::cout << "Can't decrypt message";
 			}
 		} 
 		catch (...)
 		{
-			std::cout << "Invalid message";
+			std::cout << "Can't decrypt message";
 		}
 		std::cout << "\n-----<EOM>-----\n" << std::endl;
 	}
@@ -166,12 +153,11 @@ void Client::send_text_message(const Types::Host& host)
 
 	std::string message;
 	std::cout << "Enter message: ";
-	std::cin.ignore();
 	std::getline(std::cin, message);
 
 	Serializer payload;
-	AESWrapper aes(client.aes_key);
-	payload.add(client.id, Protocol::MessageType::Text, static_cast<uint32_t>(message.size()), message, aes.encrypt(message));
+	auto encrypted_message = AESWrapper(client.aes_key).encrypt(message);
+	payload.add(client.id, Protocol::MessageType::Text, static_cast<uint32_t>(encrypted_message.size()), encrypted_message);
 
 	SocketStream sock(host);
 	Protocol::Utils::send_request_header(&sock, _id, Protocol::RequestCode::SendMessageToUser, payload.get_serialized_data_size());

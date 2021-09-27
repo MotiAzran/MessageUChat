@@ -69,9 +69,6 @@ void MessageUMenu::_register()
 
 	// Create new client rsa key pair
 	RSAPrivateWrapper rsapriv;
-	auto pub = rsapriv.getPublicKey();
-	FileStream f(std::string("pub.bin"));
-	f.write(pub);
 
 	// Create connection with the server
 	SocketStream sock(_server_host);
@@ -79,7 +76,7 @@ void MessageUMenu::_register()
 	// Send request
 	Protocol::Utils::send_request_header(&sock, Types::ClientID(), Protocol::RequestCode::Register, Common::MAX_CLIENT_NAME_LENGTH + Common::PUBLIC_KEY_SIZE);
 	sock.write(client_name, Common::MAX_CLIENT_NAME_LENGTH);
-	sock.write(pub);
+	sock.write(rsapriv.getPublicKey());
 
 	Protocol::RegisterResponse response(&sock);
 
