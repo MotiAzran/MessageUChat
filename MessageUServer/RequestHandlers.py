@@ -28,9 +28,6 @@ def register_handler(sock, client_id, payload_size):
     name = name.decode().strip('\0')
 
     # Write new user to database
-    with open("pub.bin", "wb") as f:
-        f.write(pub_key)
-
     client = Client.create_user(name, pub_key)
     ServerDatabase.register_client(client)
 
@@ -69,8 +66,6 @@ def send_public_key(sock, client_id, payload_size):
 
     requested_client_id = struct.unpack(REQUEST_PAYLOAD_PATTERN, sock.recv(payload_size))[0]
     public_key = ServerDatabase.get_client_public_key(requested_client_id)
-    with open("spub.bin", "wb") as f:
-        f.write(public_key)
 
     _send_response_header(sock, SEND_PUBLIC_KEY_CODE, struct.calcsize(RESPONSE_PAYLOAD_PATTERN))
     sock.sendall(struct.pack(RESPONSE_PAYLOAD_PATTERN, requested_client_id, public_key))
