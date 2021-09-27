@@ -15,7 +15,7 @@ int main()
 		{
 			client.print_menu();
 
-			int client_choice = 0;
+			uint32_t client_choice = 0;
 			std::cout << "? ";
 			std::cin >> client_choice;
 

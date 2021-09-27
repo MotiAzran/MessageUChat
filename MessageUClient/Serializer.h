@@ -13,8 +13,8 @@ public:
 	std::string serialize() const { return _data; }
 	uint32_t get_serialized_data_size() const { return _data.size(); }
 
-	template <typename T, typename = std::enable_if_t<std::is_pod_v<T>>>
-	void add(T item)
+	template <typename Val, typename = std::enable_if_t<std::is_pod_v<Val>>>
+	void add(Val item)
 	{
 		_data += StringUtils::to_string(item);
 	}
@@ -26,6 +26,7 @@ public:
 	}
 
 	void add(const std::string& str);
+	void add(const Types::ClientID& id);
 
 private:
 	std::string _data;

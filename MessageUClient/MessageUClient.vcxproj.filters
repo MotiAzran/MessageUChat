@@ -26,12 +26,6 @@
     <ClCompile Include="Client.cpp">
       <Filter>Client</Filter>
     </ClCompile>
-    <ClCompile Include="RegisterAction.cpp">
-      <Filter>Actions</Filter>
-    </ClCompile>
-    <ClCompile Include="ExitAction.cpp">
-      <Filter>Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Serializer.cpp">
       <Filter>Serializer</Filter>
     </ClCompile>
@@ -44,20 +38,38 @@
     <ClCompile Include="ProtocolUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ClientsListAction.cpp">
-      <Filter>Actions</Filter>
-    </ClCompile>
     <ClCompile Include="MessageUMenu.cpp">
       <Filter>Menu</Filter>
-    </ClCompile>
-    <ClCompile Include="GetPublicKeyAction.cpp">
-      <Filter>Actions</Filter>
     </ClCompile>
     <ClCompile Include="RSAStream.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
     <ClCompile Include="AESStream.cpp">
       <Filter>Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="Deserializer.cpp">
+      <Filter>Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="Response.cpp">
+      <Filter>Response</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterResponse.cpp">
+      <Filter>Response</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientsListResponse.cpp">
+      <Filter>Response</Filter>
+    </ClCompile>
+    <ClCompile Include="GetPublicKeyResponse.cpp">
+      <Filter>Response</Filter>
+    </ClCompile>
+    <ClCompile Include="GetWaitingMessagesResponse.cpp">
+      <Filter>Response</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientsList.cpp">
+      <Filter>ClientsList</Filter>
+    </ClCompile>
+    <ClCompile Include="SendMessageResponse.cpp">
+      <Filter>Response</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -76,9 +88,6 @@
     <Filter Include="Client">
       <UniqueIdentifier>{478df615-dfd2-4beb-a057-cf081f23f25c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actions">
-      <UniqueIdentifier>{8830ebe9-e1e5-4169-9a0b-f84b64713177}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Serializer">
       <UniqueIdentifier>{77ab131f-f073-408d-8199-785242dd75b8}</UniqueIdentifier>
     </Filter>
@@ -87,6 +96,12 @@
     </Filter>
     <Filter Include="Menu">
       <UniqueIdentifier>{08aea7d3-4d78-4867-8900-291e50657cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Response">
+      <UniqueIdentifier>{d0eb0d19-d3e7-4c4f-bf7a-69ba919368d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientsList">
+      <UniqueIdentifier>{464fdf01-2e7b-4f07-88af-ee1d5df5f2f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,20 +132,8 @@
     <ClInclude Include="RSAWrapper.h">
       <Filter>CryptoWrappers</Filter>
     </ClInclude>
-    <ClInclude Include="IAction.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="ActionFactory.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Client.h">
       <Filter>Client</Filter>
-    </ClInclude>
-    <ClInclude Include="RegisterAction.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="ExitAction.h">
-      <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Serializer.h">
       <Filter>Serializer</Filter>
@@ -144,9 +147,6 @@
     <ClInclude Include="ProtocolUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="ClientsListAction.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="MessageUMenu.h">
       <Filter>Menu</Filter>
     </ClInclude>
@@ -159,14 +159,35 @@
     <ClInclude Include="Exceptions.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="GetPublicKeyAction.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="RSAStream.h">
       <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="AESStream.h">
       <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="Deserializer.h">
+      <Filter>Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="Response.h">
+      <Filter>Response</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterResponse.h">
+      <Filter>Response</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientsListResponse.h">
+      <Filter>Response</Filter>
+    </ClInclude>
+    <ClInclude Include="GetPublicKeyResponse.h">
+      <Filter>Response</Filter>
+    </ClInclude>
+    <ClInclude Include="GetWaitingMessagesResponse.h">
+      <Filter>Response</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientsList.h">
+      <Filter>ClientsList</Filter>
+    </ClInclude>
+    <ClInclude Include="SendMessageResponse.h">
+      <Filter>Response</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

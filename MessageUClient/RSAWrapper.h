@@ -4,6 +4,7 @@
 #include <rsa.h>
 
 #include <string>
+#include "Types.h"
 
 class RSAPublicWrapper
 {
@@ -16,6 +17,7 @@ private:
 	CryptoPP::RSA::PublicKey _publicKey;
 
 public:
+	RSAPublicWrapper(const Types::PublicKey& key);
 	RSAPublicWrapper(const std::string& key);
 	virtual ~RSAPublicWrapper() = default;
 
@@ -25,6 +27,7 @@ public:
 	std::string getPublicKey() const;
 
 	std::string encrypt(const std::string& plain);
+	std::string encrypt(const char* plain, unsigned int length);
 };
 
 
@@ -49,4 +52,5 @@ public:
 	std::string getPublicKey() const;
 
 	std::string decrypt(const std::string& cipher);
+	std::string decrypt(const char* plain, unsigned int length);
 };

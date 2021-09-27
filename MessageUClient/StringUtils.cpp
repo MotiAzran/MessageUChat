@@ -15,24 +15,36 @@ bool StringUtils::is_number(const std::string& str)
 
 Types::ClientID StringUtils::to_client_id(const std::string& str)
 {
-	if (Common::CLIENT_IDENTIFIER_STR_LENGTH == str.size())
+	if (Common::CLIENT_ID_STR_LENGTH == str.size())
 	{
 		auto decoded = HexWrapper::decode(str);
 
-		return Types::ClientID(to_array<Common::CLIENT_IDENTIFIER_SIZE_BYTES>(decoded));
+		return to_array<Common::CLIENT_ID_SIZE_BYTES>(decoded);
 	}
-	else if (Common::CLIENT_IDENTIFIER_SIZE_BYTES == str.size())
+	else if (Common::CLIENT_ID_SIZE_BYTES == str.size())
 	{
-		return Types::ClientID(to_array<Common::CLIENT_IDENTIFIER_SIZE_BYTES>(str));
+		return to_array<Common::CLIENT_ID_SIZE_BYTES>(str);
 	}
 	
 	throw std::exception("Invalid client id");
 }
 
-std::string StringUtils::to_string(const Types::ClientID& id)
+Types::PublicKey StringUtils::to_public_key(const std::string& str)
 {
-	std::string id_str(id.size(), 0);
-	CopyMemory(id_str.data(), id.data(), id.size());
+	if (Common::PUBLIC_KEY_SIZE != str.size())
+	{
+		throw std::exception("Invalid public key");
+	}
 
-	return id_str;
+	return to_array<Common::PUBLIC_KEY_SIZE>(str);
+}
+
+Types::AESKey StringUtils::to_aes_key(const std::string& str)
+{
+	if (Common::AES_KEY_SIZE != str.size())
+	{
+		throw std::exception("Invalid aes key");
+	}
+
+	return to_array<Common::AES_KEY_SIZE>(str);
 }

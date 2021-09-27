@@ -1,5 +1,4 @@
 #include "RSAStream.h"
-#include "RSAStream.h"
 
 
 RSAStream::RSAStream(const std::string& private_key, const std::string& public_key, Stream* stream) :
@@ -28,5 +27,10 @@ std::string RSAStream::read(const uint32_t size)
 
 void RSAStream::write(const std::string& buf)
 {
-	_stream->write(_rsapub.encrypt(buf));
+	write(buf.data(), buf.size());
+}
+
+void RSAStream::write(const char* buf, const uint32_t length)
+{
+	_stream->write(_rsapub.encrypt(buf, length));
 }

@@ -1,4 +1,5 @@
 #include "AESWrapper.h"
+#include "StringUtils.h"
 
 #include <modes.h>
 #include <aes.h>
@@ -27,7 +28,15 @@ AESWrapper::AESWrapper(const std::string& key) :
 		throw std::length_error("key length must be 16 bytes");
 }
 
+AESWrapper::AESWrapper(const Types::AESKey& key) :
+	AESWrapper(StringUtils::to_string(key)) {}
+
 std::string AESWrapper::encrypt(const std::string& plain)
+{
+	return encrypt(plain.data(), plain.size());
+}
+
+std::string AESWrapper::encrypt(const char* plain, const uint32_t length)
 {
 	CryptoPP::byte iv[CryptoPP::AES::BLOCKSIZE] = { 0 };	// for practical use iv should never be a fixed value!
 
@@ -36,14 +45,18 @@ std::string AESWrapper::encrypt(const std::string& plain)
 
 	std::string cipher;
 	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink(cipher));
-	stfEncryptor.Put(reinterpret_cast<const CryptoPP::byte*>(plain.data()), plain.size());
+	stfEncryptor.Put(reinterpret_cast<const CryptoPP::byte*>(plain), length);
 	stfEncryptor.MessageEnd();
 
 	return cipher;
 }
 
-
 std::string AESWrapper::decrypt(const std::string& cipher)
+{
+	return decrypt(cipher.data(), cipher.size());
+}
+
+std::string AESWrapper::decrypt(const char* cipher, const uint32_t length)
 {
 	CryptoPP::byte iv[CryptoPP::AES::BLOCKSIZE] = { 0 };	// for practical use iv should never be a fixed value!
 
@@ -52,7 +65,7 @@ std::string AESWrapper::decrypt(const std::string& cipher)
 
 	std::string decrypted;
 	CryptoPP::StreamTransformationFilter stfDecryptor(cbcDecryption, new CryptoPP::StringSink(decrypted));
-	stfDecryptor.Put(reinterpret_cast<const CryptoPP::byte*>(cipher.data()), cipher.size());
+	stfDecryptor.Put(reinterpret_cast<const CryptoPP::byte*>(cipher), length);
 	stfDecryptor.MessageEnd();
 
 	return decrypted;

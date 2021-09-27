@@ -19,8 +19,9 @@ public:
 	uint32_t get_file_size() const;
 	std::filesystem::path get_path() const { return _path; }
 
-	virtual std::string read(const uint32_t size);
-	virtual void write(const std::string& data);
+	virtual std::string read(const uint32_t size) override;
+	virtual void write(const std::string& data) override;
+	virtual void write(const char* buf, const uint32_t length) override;
 
 	void flush();
 

@@ -44,6 +44,11 @@ std::string FileStream::read(const uint32_t size)
 
 void FileStream::write(const std::string& data)
 {
+	write(data.data(), data.size());
+}
+
+void FileStream::write(const char* buf, const uint32_t length)
+{
 	// Validate the file still opened
 	if (!_ifile.is_open() || !_ofile.is_open())
 	{
@@ -51,7 +56,7 @@ void FileStream::write(const std::string& data)
 	}
 
 	// Write buffer to the file
-	_ofile.write(reinterpret_cast<const char*>(data.data()), data.size());
+	_ofile.write(buf, length);
 }
 
 void FileStream::flush()

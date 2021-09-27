@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "Types.h"
 
 
 class AESWrapper
@@ -16,10 +17,13 @@ public:
 
 	AESWrapper();
 	AESWrapper(const std::string& key);
+	AESWrapper(const Types::AESKey& key);
 	virtual ~AESWrapper() = default;
 
 	std::string getKey() const { return _key; }
 
 	std::string encrypt(const std::string& plain);
+	std::string encrypt(const char* plain, const uint32_t length);
 	std::string decrypt(const std::string& cipher);
+	std::string decrypt(const char* plain, const uint32_t length);
 };

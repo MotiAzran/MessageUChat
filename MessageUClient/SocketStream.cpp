@@ -57,12 +57,17 @@ std::string SocketStream::read(const uint32_t size)
 
 void SocketStream::write(const std::string& data)
 {
-	if (data.empty())
+	write(data.data(), data.size());
+}
+
+void SocketStream::write(const char* buf, const uint32_t length)
+{
+	if (0 == length)
 	{
 		throw std::exception("Can't send empty buffer");
 	}
 
-	if (SOCKET_ERROR == ::send(_sock, reinterpret_cast<const char*>(data.data()), data.size(), 0))
+	if (SOCKET_ERROR == ::send(_sock, buf, length, 0))
 	{
 		throw std::exception("Send data failed");
 	}

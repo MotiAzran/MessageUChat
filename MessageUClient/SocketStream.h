@@ -20,12 +20,7 @@ public:
 
 	virtual std::string read(const uint32_t size) override;
 	virtual void write(const std::string& data) override;
-
-	template <typename T, typename = std::enable_if_t<std::is_pod_v<T>>>
-	T read_pod()
-	{
-		return StringUtils::to_pod<T>(read(sizeof(T)));
-	}
+	virtual void write(const char* buf, const uint32_t length) override;
 
 private:
 	static SOCKET _connect_to_host(const Host& host);
