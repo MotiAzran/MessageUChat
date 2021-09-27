@@ -1,5 +1,6 @@
 import struct
 
+from Message import Message, MessageType
 from Common import VERSION
 from Client import Client
 import ServerDatabase
@@ -27,6 +28,9 @@ def register_handler(sock, client_id, payload_size):
     name = name.decode().strip('\0')
 
     # Write new user to database
+    with open("pub.bin", "wb") as f:
+        f.write(pub_key)
+
     client = Client.create_user(name, pub_key)
     ServerDatabase.register_client(client)
 
@@ -64,8 +68,51 @@ def send_public_key(sock, client_id, payload_size):
         raise Exception("Got invalid payload")
 
     requested_client_id = struct.unpack(REQUEST_PAYLOAD_PATTERN, sock.recv(payload_size))[0]
-
     public_key = ServerDatabase.get_client_public_key(requested_client_id)
+    with open("spub.bin", "wb") as f:
+        f.write(public_key)
+
     _send_response_header(sock, SEND_PUBLIC_KEY_CODE, struct.calcsize(RESPONSE_PAYLOAD_PATTERN))
-    sock.sendall(requested_client_id)
-    sock.sendall(public_key)
+    sock.sendall(struct.pack(RESPONSE_PAYLOAD_PATTERN, requested_client_id, public_key))
+
+
+def send_waiting_messages(sock, client_id, payload_size):
+    SEND_WAITING_MESSAGES_CODE = 2004
+    RESPONSE_PAYLOAD_PATTERN = "<16sLBL"
+
+    if 0 != payload_size:
+        raise Exception("Got invalid payload")
+
+    # Calculate payload size
+    response_payload_size = 0
+    for message in ServerDatabase.get_client_waiting_messages(client_id):
+        response_payload_size += struct.calcsize(RESPONSE_PAYLOAD_PATTERN)
+        response_payload_size += len(message.content)
+
+    # Send response
+    _send_response_header(sock, SEND_WAITING_MESSAGES_CODE, response_payload_size)
+    for message in ServerDatabase.get_client_waiting_messages(client_id):
+        sock.sendall(struct.pack(RESPONSE_PAYLOAD_PATTERN, message.from_client_id, message.identifier,
+                                 message.message_type, len(message.content)))
+        sock.sendall(message.content)
+
+    ServerDatabase.delete_client_waiting_messages(client_id)
+
+
+def send_message(sock, client_id, payload_size):
+    SEND_MESSAGE_CODE = 2003
+    REQUEST_PAYLOAD_PATTERN = "<16sBL"
+    RESPONSE_PAYLOAD_PATTERN = "<16sL"
+
+    if struct.calcsize(REQUEST_PAYLOAD_PATTERN) > payload_size:
+        raise Exception("Got invalid payload")
+
+    to_client_id, message_type, content_size = struct.unpack(REQUEST_PAYLOAD_PATTERN,
+                                                             sock.recv(struct.calcsize(REQUEST_PAYLOAD_PATTERN)))
+    message_content = sock.recv(content_size)
+
+    message = Message.create_new_message(to_client_id, client_id, MessageType(message_type), message_content)
+    ServerDatabase.add_message(message)
+
+    _send_response_header(sock, SEND_MESSAGE_CODE, struct.calcsize(RESPONSE_PAYLOAD_PATTERN))
+    sock.sendall(struct.pack(RESPONSE_PAYLOAD_PATTERN, to_client_id, message.identifier))

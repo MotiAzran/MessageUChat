@@ -12,7 +12,7 @@ class MessageType(Enum):
 
 class Message(object):
     counter_lock = threading.Lock()
-    message_counter = 0
+    message_counter = ServerDatabase.get_max_message_id() + 1
 
     def __init__(self, id_, to_id, from_id, message_type, content):
         if not ServerDatabase.is_client_id_exists(to_id) or not ServerDatabase.is_client_id_exists(from_id):
@@ -20,9 +20,6 @@ class Message(object):
 
         if not isinstance(message_type, MessageType):
             raise ValueError("Invalid message type")
-
-        if 0 == len(content):
-            raise ValueError("Can't send empty message")
 
         self._id = id_
         self._to_id = to_id

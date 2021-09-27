@@ -91,9 +91,23 @@ def add_message(message):
                       message.message_type, message.content))
 
 
-def get_client_waiting_messages(user):
-    cursor = _execute_command(f'''SELECT * FROM {MESSAGES_TABLE_NAME} WHERE ToClient=?''', [user.identifier])
+def get_client_waiting_messages(client_id):
+    cursor = _execute_command(f'''SELECT * FROM {MESSAGES_TABLE_NAME} WHERE ToClient=?''', [client_id])
     row = cursor.fetchone()
     while row is not None:
         yield Message.Message(row["ID"], row["ToClient"], row["FromClient"],
                               Message.MessageType(row["Type"]), row["Content"])
+        row = cursor.fetchone()
+
+
+def delete_client_waiting_messages(client_id):
+    _execute_command(f'''DELETE FROM {MESSAGES_TABLE_NAME} WHERE ToClient=?''', [client_id])
+
+
+def get_max_message_id():
+    try:
+        cursor = _execute_command(f'''SELECT MAX(ID) AS MaxID FROM {MESSAGES_TABLE_NAME}''')
+        row = cursor.fetchone()
+        return -1 if row["MaxID"] is None else row["MaxID"]
+    except:
+        return -1
