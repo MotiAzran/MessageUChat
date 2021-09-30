@@ -30,14 +30,4 @@ namespace Protocol
 		SendSymetricKey,
 		Text
 	};
-
-	struct ResponseHeader
-	{
-		uint8_t version;
-		ResponseCode code;
-		uint32_t payload_size;
-
-		ResponseHeader(uint8_t version, ResponseCode code, uint32_t payload_size) :
-			version(version), code(code), payload_size(payload_size) {}
-	};
 }

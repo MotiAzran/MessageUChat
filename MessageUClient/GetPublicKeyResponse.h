@@ -5,9 +5,8 @@
 
 namespace Protocol
 {
-	class GetPublicKeyResponse : public Response
+	struct GetPublicKeyResponse : public Response
 	{
-	public:
 		explicit GetPublicKeyResponse(Stream* stream);
 		virtual ~GetPublicKeyResponse() = default;
 

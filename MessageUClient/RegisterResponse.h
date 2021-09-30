@@ -5,9 +5,8 @@
 
 namespace Protocol
 {
-	class RegisterResponse : public Response
+	struct RegisterResponse : public Response
 	{
-	public:
 		explicit RegisterResponse(Stream* stream);
 		virtual ~RegisterResponse() = default;
 

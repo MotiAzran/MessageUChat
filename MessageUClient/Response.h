@@ -6,12 +6,8 @@
 
 namespace Protocol
 {
-	class Response
+	struct Response
 	{
-	public:
-		const uint32_t HEADER_SIZE = sizeof(uint8_t) + sizeof(Protocol::ResponseCode) + sizeof(uint32_t);
-
-	public:
 		explicit Response(Stream* stream);
 		virtual ~Response() = default;
 

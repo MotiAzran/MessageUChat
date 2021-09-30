@@ -5,6 +5,7 @@ using namespace Protocol;
 
 Response::Response(Stream* stream)
 {
+	const uint32_t HEADER_SIZE = sizeof(uint8_t) + sizeof(Protocol::ResponseCode) + sizeof(uint32_t);
 	Deserializer header(stream->read(HEADER_SIZE));
 
 	version = header.read<uint8_t>();

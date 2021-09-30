@@ -7,9 +7,8 @@
 
 namespace Protocol
 {
-	class SendMessageResponse : public Response
+	struct SendMessageResponse : public Response
 	{
-	public:
 		explicit SendMessageResponse(Stream* stream);
 		virtual ~SendMessageResponse() = default;
 
