@@ -5,9 +5,9 @@
 
 namespace Protocol
 {
-	struct RegisterResponse : public Response
+	struct RegisterResponse
 	{
-		explicit RegisterResponse(Stream* stream);
+		explicit RegisterResponse(Response&& response);
 		virtual ~RegisterResponse() = default;
 
 		Types::ClientID client_id;

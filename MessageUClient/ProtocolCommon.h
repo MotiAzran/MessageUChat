@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include "Types.h"
+#include "Common.h"
 
 namespace Protocol
 {
@@ -29,6 +31,17 @@ namespace Protocol
 		SymetricKeyRequest = 1,
 		SendSymetricKey,
 		Text
+	};
+
+	struct ClientEntry
+	{
+		static const uint32_t SIZE = Common::CLIENT_ID_SIZE_BYTES + Common::MAX_CLIENT_NAME_LENGTH;
+
+		Types::ClientID id;
+		std::string name;
+
+		ClientEntry(const Types::ClientID& id, const std::string& name) :
+			id(id), name(name) {}
 	};
 
 	struct MessageEntry

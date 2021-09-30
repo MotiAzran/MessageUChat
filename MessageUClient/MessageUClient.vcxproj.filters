@@ -65,7 +65,9 @@
     <ClCompile Include="SendMessageRequest.cpp">
       <Filter>Request</Filter>
     </ClCompile>
-    <ClCompile Include="RegisterRequest.cpp" />
+    <ClCompile Include="RegisterRequest.cpp">
+      <Filter>Request</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Network">
@@ -97,6 +99,9 @@
     </Filter>
     <Filter Include="Request">
       <UniqueIdentifier>{cab2cfe6-ec71-4b6b-becc-c4678c6479d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Walkers">
+      <UniqueIdentifier>{2d1d95b1-4c3f-48c4-88bd-ea78149966af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -7,9 +7,9 @@
 
 namespace Protocol
 {
-	struct SendMessageResponse : public Response
+	struct SendMessageResponse
 	{
-		explicit SendMessageResponse(Stream* stream);
+		explicit SendMessageResponse(Response&& response);
 		virtual ~SendMessageResponse() = default;
 
 		Types::ClientID client_id;

@@ -5,16 +5,15 @@
 
 using namespace Protocol;
 
-RegisterResponse::RegisterResponse(Stream* stream) : 
-	Response(stream)
+RegisterResponse::RegisterResponse(Response&& response)
 {
 	const auto expected_payload_size = Common::CLIENT_ID_SIZE_BYTES;
-	if (code != ResponseCode::RegisterSuccess ||
-		expected_payload_size != payload_size)
+	if (response.code != ResponseCode::RegisterSuccess ||
+		expected_payload_size != response.payload.size())
 	{
 		throw ServerErrorException();
 	}
 
-	Deserializer payload(stream->receive(expected_payload_size));
+	Deserializer payload(std::move(response.payload));
 	client_id = payload.read_client_id();
 }

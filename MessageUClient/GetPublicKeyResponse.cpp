@@ -4,17 +4,16 @@
 
 using namespace Protocol;
 
-GetPublicKeyResponse::GetPublicKeyResponse(Stream* stream) :
-	Response(stream)
+Protocol::GetPublicKeyResponse::GetPublicKeyResponse(Response&& response)
 {
 	const auto expected_payload_size = Common::CLIENT_ID_SIZE_BYTES + Common::PUBLIC_KEY_SIZE;
-	if (code != Protocol::ResponseCode::PublicKeySent ||
-		expected_payload_size != payload_size)
+	if (response.code != Protocol::ResponseCode::PublicKeySent ||
+		expected_payload_size != response.payload.size())
 	{
 		throw ServerErrorException();
 	}
 
-	Deserializer payload(stream->receive(expected_payload_size));
+	Deserializer payload(std::move(response.payload));
 	client_id = payload.read_client_id();
 	public_key = payload.read_public_key();
 }

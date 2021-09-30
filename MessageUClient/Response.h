@@ -1,18 +1,24 @@
 #pragma once
 
 #include <cstdint>
-#include "Stream.h"
+#include <string>
 #include "ProtocolCommon.h"
+#include "Socket.h"
 
 namespace Protocol
 {
 	struct Response
 	{
-		explicit Response(Stream* stream);
-		virtual ~Response() = default;
+		static const uint32_t HEADER_SIZE = sizeof(uint8_t) + sizeof(Protocol::ResponseCode) + sizeof(uint32_t);
 
 		uint8_t version;
-		Protocol::ResponseCode code;
-		uint32_t payload_size;
+		ResponseCode code;
+		std::string payload;
+
+		explicit Response(const uint8_t version, const ResponseCode code, std::string&& payload) :
+			version(version), code(code), payload(std::move(payload)) {}
+		virtual ~Response() = default;
 	};
+
+	Response get_response(Socket& sock);
 }

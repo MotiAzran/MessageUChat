@@ -1,35 +1,21 @@
 #pragma once
 
-#include <iterator>
 #include "Response.h"
-#include "Common.h"
-#include "Types.h"
+#include "ProtocolCommon.h"
+#include "Deserializer.h"
 
 namespace Protocol
 {
-	class ClientsListResponse : public Response
+	class ClientsListResponse
 	{
 	public:
-		struct ClientEntry
-		{
-			static const uint32_t SIZE = Common::CLIENT_ID_SIZE_BYTES + Common::MAX_CLIENT_NAME_LENGTH;
-
-			Types::ClientID id;
-			std::string name;
-
-			ClientEntry(const Types::ClientID& id, const std::string& name) :
-				id(id), name(name) {}
-		};
-
-	public:
-		explicit ClientsListResponse(Stream* stream);
+		explicit ClientsListResponse(Response&& response);
 		virtual ~ClientsListResponse() = default;
 
 		ClientEntry get_next_entry();
-		bool is_done() const { return 0 == _remaining_entries; }
+		bool is_done() const { return 0 == _payload.size(); }
 
 	private:
-		Stream* _stream;
-		uint32_t _remaining_entries;
+		Deserializer _payload;
 	};
 }

@@ -5,9 +5,9 @@
 
 namespace Protocol
 {
-	struct GetPublicKeyResponse : public Response
+	struct GetPublicKeyResponse
 	{
-		explicit GetPublicKeyResponse(Stream* stream);
+		GetPublicKeyResponse(Response&& response);
 		virtual ~GetPublicKeyResponse() = default;
 
 		Types::ClientID client_id;

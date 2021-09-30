@@ -13,6 +13,8 @@ public:
 	explicit Deserializer(std::string&& data);
 	virtual ~Deserializer() = default;
 
+	uint32_t size() const { return _data.size(); }
+
 	std::string read(const uint32_t size);
 
 	template <typename Val, typename = std::enable_if_t<std::is_pod_v<Val>>>

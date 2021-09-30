@@ -5,26 +5,18 @@
 
 using namespace Protocol;
 
-ClientsListResponse::ClientsListResponse(Stream* stream) :
-	Response(stream),
-	_stream(stream),
-	_remaining_entries(payload_size / ClientsListResponse::ClientEntry::SIZE)
+ClientsListResponse::ClientsListResponse(Response&& response) :
+	_payload(std::move(response.payload))
 {
-	if (ResponseCode::ClientsListSent != code)
+	if (ResponseCode::ClientsListSent != response.code)
 	{
 		throw ServerErrorException();
 	}
 }
 
-ClientsListResponse::ClientEntry ClientsListResponse::get_next_entry()
+ClientEntry ClientsListResponse::get_next_entry()
 {
-	if (0 == _remaining_entries)
-	{
-		throw std::out_of_range("No more clients entries");
-	}
-
-	Deserializer entry(_stream->receive(ClientEntry::SIZE));
-	--_remaining_entries;
+	Deserializer entry(_payload.read(ClientEntry::SIZE));
 
 	Types::ClientID id = entry.read_client_id();
 	auto name = entry.read(Common::MAX_CLIENT_NAME_LENGTH);
