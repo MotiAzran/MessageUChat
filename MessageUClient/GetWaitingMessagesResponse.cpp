@@ -10,10 +10,11 @@ GetWaitingMessagesResponse::GetWaitingMessagesResponse(Stream* stream) :
 	_stream(stream),
 	_size_left_to_read(payload_size) {}
 
-GetWaitingMessagesResponse::MessageEntry GetWaitingMessagesResponse::read_next_message()
+MessageEntry GetWaitingMessagesResponse::read_next_message()
 {
-	Deserializer payload(_stream->read(MessageEntry::SIZE_NO_CONTENT));
-	_size_left_to_read -= MessageEntry::SIZE_NO_CONTENT;
+	const uint32_t MESSAGE_SIZE_NO_CONTENT = Common::CLIENT_ID_SIZE_BYTES + sizeof(uint32_t) + sizeof(MessageType) + sizeof(uint32_t);
+	Deserializer payload(_stream->read(MESSAGE_SIZE_NO_CONTENT));
+	_size_left_to_read -= MESSAGE_SIZE_NO_CONTENT;
 
 	Types::ClientID client_id = payload.read_client_id();
 	auto message_id = payload.read<uint32_t>();

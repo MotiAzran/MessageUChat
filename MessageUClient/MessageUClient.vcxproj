@@ -168,6 +168,7 @@
     <ClCompile Include="MessageUMenu.cpp" />
     <ClCompile Include="ProtocolUtils.cpp" />
     <ClCompile Include="RegisterResponse.cpp" />
+    <ClCompile Include="Request.cpp" />
     <ClCompile Include="Response.cpp" />
     <ClCompile Include="RSAWrapper.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -175,6 +176,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
+    <ClCompile Include="SendMessageRequest.cpp" />
     <ClCompile Include="SendMessageResponse.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="SocketStream.cpp" />
@@ -190,7 +192,10 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Deserializer.h" />
     <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="GetClientsListRequest.h" />
+    <ClInclude Include="GetPublicKeyRequest.h" />
     <ClInclude Include="GetPublicKeyResponse.h" />
+    <ClInclude Include="GetWaitingMessagesRequest.h" />
     <ClInclude Include="GetWaitingMessagesResponse.h" />
     <ClInclude Include="HexWrapper.h" />
     <ClInclude Include="IPAddress.h" />
@@ -198,9 +203,14 @@
     <ClInclude Include="ProtocolCommon.h" />
     <ClInclude Include="ProtocolUtils.h" />
     <ClInclude Include="RegisterResponse.h" />
+    <ClInclude Include="Request.h" />
+    <ClInclude Include="RequestSymetricKeyRequest.h" />
     <ClInclude Include="Response.h" />
     <ClInclude Include="RSAWrapper.h" />
+    <ClInclude Include="SendMessageRequest.h" />
     <ClInclude Include="SendMessageResponse.h" />
+    <ClInclude Include="SendSymetricKeyRequest.h" />
+    <ClInclude Include="SendTextMessageRequest.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="SocketStream.h" />
     <ClInclude Include="Stream.h" />

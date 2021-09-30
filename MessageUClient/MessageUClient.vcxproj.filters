@@ -62,6 +62,12 @@
     <ClCompile Include="SendMessageResponse.cpp">
       <Filter>Response</Filter>
     </ClCompile>
+    <ClCompile Include="Request.cpp">
+      <Filter>Request</Filter>
+    </ClCompile>
+    <ClCompile Include="SendMessageRequest.cpp">
+      <Filter>Request</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Network">
@@ -93,6 +99,9 @@
     </Filter>
     <Filter Include="ClientsList">
       <UniqueIdentifier>{464fdf01-2e7b-4f07-88af-ee1d5df5f2f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Request">
+      <UniqueIdentifier>{cab2cfe6-ec71-4b6b-becc-c4678c6479d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +179,30 @@
     </ClInclude>
     <ClInclude Include="SendMessageResponse.h">
       <Filter>Response</Filter>
+    </ClInclude>
+    <ClInclude Include="Request.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="GetClientsListRequest.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="GetPublicKeyRequest.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="GetWaitingMessagesRequest.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="SendMessageRequest.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="SendTextMessageRequest.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestSymetricKeyRequest.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="SendSymetricKeyRequest.h">
+      <Filter>Request</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

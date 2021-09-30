@@ -4,11 +4,21 @@
 #include "Base64Wrapper.h"
 #include "ProtocolUtils.h"
 #include "Exceptions.h"
+#include "Client.h"
+
+// Requests
+#include "GetClientsListRequest.h"
+#include "GetPublicKeyRequest.h"
+#include "GetWaitingMessagesRequest.h"
+#include "SendTextMessageRequest.h"
+#include "RequestSymetricKeyRequest.h"
+#include "SendSymetricKeyRequest.h"
+
+// Responses
 #include "ClientsListResponse.h"
 #include "GetPublicKeyResponse.h"
 #include "GetWaitingMessagesResponse.h"
 #include "SendMessageResponse.h"
-#include "Client.h"
 
 Client* Client::client_from_file(const std::filesystem::path& path)
 {
@@ -50,7 +60,10 @@ Client::Client(const std::string& name, const Types::ClientID& identifier, const
 void Client::get_clients_list(const Types::Host& host)
 {
 	SocketStream sock(host);
-	Protocol::Utils::send_request_header(&sock, _id, Protocol::RequestCode::ClientsList, 0);
+
+	Protocol::GetClientsListRequest request(_id, Common::VERSION);
+	sock.write(request.serialize());
+
 	Protocol::ClientsListResponse response(&sock);
 	if (response.is_done())
 	{
@@ -74,8 +87,9 @@ void Client::get_client_public_key(const Types::Host& host)
 	auto client = _get_client_from_user();
 
 	SocketStream sock(host);
-	Protocol::Utils::send_request_header(&sock, _id, Protocol::RequestCode::PublicKeyRequest, Common::CLIENT_ID_SIZE_BYTES);
-	sock.write(StringUtils::to_string(client.id));
+
+	Protocol::GetPublicKeyRequest request(_id, Common::VERSION, client.id);
+	sock.write(request.serialize());
 
 	// Receive response
 	Protocol::GetPublicKeyResponse response(&sock);
@@ -84,13 +98,15 @@ void Client::get_client_public_key(const Types::Host& host)
 		throw ServerErrorException();
 	}
 
-	_clients.update(client.id, response.public_key);
+	_clients.update(client.id, response.rsapub);
 }
 
 void Client::get_waiting_messages(const Types::Host& host)
 {
 	SocketStream sock(host);
-	Protocol::Utils::send_request_header(&sock, _id, Protocol::RequestCode::WaitingMessagesRequest, 0);
+
+	Protocol::GetWaitingMessagesRequest request(_id, Common::VERSION);
+	sock.write(request.serialize());
 
 	Protocol::GetWaitingMessagesResponse response(&sock);
 	if (response.is_done())
@@ -100,33 +116,7 @@ void Client::get_waiting_messages(const Types::Host& host)
 
 	while (!response.is_done())
 	{
-		auto message = response.read_next_message();
-		auto client = _clients.get_client(message.client_id);
-		std::cout << "From: " << client.name << std::endl;
-		std::cout << "Content:\n";
-		try
-		{
-			switch (message.message_type)
-			{
-			case Protocol::MessageType::SendSymetricKey:
-				_clients.update(message.client_id, StringUtils::to_aes_key(_rsapriv.decrypt(message.message_content)));
-				std::cout << "Symetric key received";
-				break;
-			case Protocol::MessageType::SymetricKeyRequest:
-				std::cout << "Request for symetric key";
-				break;
-			case Protocol::MessageType::Text:
-				std::cout << _aes.decrypt(message.message_content);
-				break;
-			default:
-				std::cout << "Can't decrypt message";
-			}
-		} 
-		catch (...)
-		{
-			std::cout << "Can't decrypt message";
-		}
-		std::cout << "\n-----<EOM>-----\n" << std::endl;
+		_print_message(response.read_next_message());
 	}
 }
 
@@ -143,13 +133,10 @@ void Client::send_text_message(const Types::Host& host)
 	std::cout << "Enter message: ";
 	std::getline(std::cin, message);
 
-	Serializer payload;
-	auto encrypted_message = AESWrapper(client.aes_key).encrypt(message);
-	payload.add(client.id, Protocol::MessageType::Text, static_cast<uint32_t>(encrypted_message.size()), encrypted_message);
-
 	SocketStream sock(host);
-	Protocol::Utils::send_request_header(&sock, _id, Protocol::RequestCode::SendMessageToUser, payload.get_serialized_data_size());
-	sock.write(payload.serialize());
+
+	Protocol::SendTextMessageRequest request(_id, Common::VERSION, client.id, client.aes.encrypt(message));
+	sock.write(request.serialize());
 
 	Protocol::SendMessageResponse response(&sock);
 	if (response.client_id != client.id)
@@ -161,12 +148,11 @@ void Client::send_text_message(const Types::Host& host)
 void Client::request_symetric_key(const Types::Host& host)
 {
 	auto client = _get_client_from_user();
-	Serializer payload;
-	payload.add(client.id, Protocol::MessageType::SymetricKeyRequest, static_cast<uint32_t>(0));
 
 	SocketStream sock(host);
-	Protocol::Utils::send_request_header(&sock, _id, Protocol::RequestCode::SendMessageToUser, payload.get_serialized_data_size());
-	sock.write(payload.serialize());
+
+	Protocol::RequestSymetricKeyRequest request(_id, Common::VERSION, client.id);
+	sock.write(request.serialize());
 
 	Protocol::SendMessageResponse response(&sock);
 	if (response.client_id != client.id)
@@ -184,13 +170,10 @@ void Client::send_symetric_key(const Types::Host& host)
 		return;
 	}
 
-	Serializer payload;
-	auto encrypted_key = RSAPublicWrapper(client.public_key).encrypt(_aes.getKey());
-	payload.add(client.id, Protocol::MessageType::SendSymetricKey, static_cast<uint32_t>(encrypted_key.size()), encrypted_key);
-
 	SocketStream sock(host);
-	Protocol::Utils::send_request_header(&sock, _id, Protocol::RequestCode::SendMessageToUser, payload.get_serialized_data_size());
-	sock.write(payload.serialize());
+
+	Protocol::SendSymetricKeyRequest request(_id, Common::VERSION, client.id, client.rsapub.encrypt(_aes.getKey()));
+	sock.write(request.serialize());
 
 	Protocol::SendMessageResponse response(&sock);
 	if (response.client_id != client.id)
@@ -207,4 +190,34 @@ ClientsList::ClientField Client::_get_client_from_user()
 	std::cin.getline(client_name, Common::MAX_CLIENT_NAME_LENGTH);
 
 	return _clients.get_client(std::string(client_name));
+}
+
+void Client::_print_message(Protocol::MessageEntry&& message)
+{
+	auto client = _clients.get_client(message.client_id);
+	std::cout << "From: " << client.name << std::endl;
+	std::cout << "Content:\n";
+	try
+	{
+		switch (message.message_type)
+		{
+		case Protocol::MessageType::SendSymetricKey:
+			_clients.update(message.client_id, StringUtils::to_aes_key(_rsapriv.decrypt(message.message_content)));
+			std::cout << "Symetric key received";
+			break;
+		case Protocol::MessageType::SymetricKeyRequest:
+			std::cout << "Request for symetric key";
+			break;
+		case Protocol::MessageType::Text:
+			std::cout << _aes.decrypt(message.message_content);
+			break;
+		default:
+			std::cout << "Can't decrypt message";
+		}
+	}
+	catch (...)
+	{
+		std::cout << "Can't decrypt message";
+	}
+	std::cout << "\n-----<EOM>-----\n" << std::endl;
 }

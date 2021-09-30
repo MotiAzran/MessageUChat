@@ -2,9 +2,9 @@
 #include "ClientsList.h"
 
 void ClientsList::insert(const Types::ClientID& id, const std::string& name,
-	const Types::PublicKey& public_key, const Types::AESKey& aes_key)
+	const Types::PublicKey& rsapub, const Types::AESKey& aes)
 {
-	_clients[MapKey(id, name)] = MapValue(public_key, aes_key);
+	_clients[MapKey(id, name)] = MapValue(rsapub, aes);
 }
 
 void ClientsList::insert(const Types::ClientID& id, const std::string& name)

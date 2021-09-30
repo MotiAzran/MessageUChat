@@ -35,6 +35,7 @@ public:
 
 private:
 	ClientsList::ClientField _get_client_from_user();
+	void _print_message(Protocol::MessageEntry&& message);
 
 private:
 	std::string _name;
