@@ -179,7 +179,7 @@
     <ClCompile Include="SendMessageRequest.cpp" />
     <ClCompile Include="SendMessageResponse.cpp" />
     <ClCompile Include="Serializer.cpp" />
-    <ClCompile Include="SocketStream.cpp" />
+    <ClCompile Include="Socket.cpp" />
     <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -212,8 +212,7 @@
     <ClInclude Include="SendSymetricKeyRequest.h" />
     <ClInclude Include="SendTextMessageRequest.h" />
     <ClInclude Include="Serializer.h" />
-    <ClInclude Include="SocketStream.h" />
-    <ClInclude Include="Stream.h" />
+    <ClInclude Include="Socket.h" />
     <ClInclude Include="StringUtils.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>

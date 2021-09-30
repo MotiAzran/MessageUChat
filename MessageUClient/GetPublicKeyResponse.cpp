@@ -14,7 +14,7 @@ GetPublicKeyResponse::GetPublicKeyResponse(Stream* stream) :
 		throw ServerErrorException();
 	}
 
-	Deserializer payload(stream->read(expected_payload_size));
+	Deserializer payload(stream->receive(expected_payload_size));
 	client_id = payload.read_client_id();
 	public_key = payload.read_public_key();
 }

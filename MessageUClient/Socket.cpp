@@ -1,6 +1,6 @@
-#include "SocketStream.h"
+#include "Socket.h"
 
-SocketStream::SocketStream(SOCKET sock) :
+Socket::Socket(SOCKET sock) :
 	_sock(sock)
 {
 	if (INVALID_SOCKET == sock)
@@ -9,10 +9,10 @@ SocketStream::SocketStream(SOCKET sock) :
 	}
 }
 
-SocketStream::SocketStream(const Host& host) :
-	SocketStream(_connect_to_host(host)) {}
+Socket::Socket(const Host& host) :
+	Socket(_connect_to_host(host)) {}
 
-SocketStream::~SocketStream()
+Socket::~Socket()
 {
 	try
 	{
@@ -24,13 +24,13 @@ SocketStream::~SocketStream()
 	} catch(...) {}
 }
 
-SocketStream::SocketStream(SocketStream&& other) noexcept :
+Socket::Socket(Socket&& other) noexcept :
 	_sock(other._sock)
 {
 	other._sock = INVALID_SOCKET;
 }
 
-SocketStream& SocketStream::operator=(SocketStream&& other) noexcept
+Socket& Socket::operator=(Socket&& other) noexcept
 {
 	_sock = other._sock;
 	other._sock = INVALID_SOCKET;
@@ -38,7 +38,7 @@ SocketStream& SocketStream::operator=(SocketStream&& other) noexcept
 	return *this;
 }
 
-std::string SocketStream::read(const uint32_t size)
+std::string Socket::receive(const uint32_t size)
 {
 	if (0 == size)
 	{
@@ -55,25 +55,20 @@ std::string SocketStream::read(const uint32_t size)
 	return buf;
 }
 
-void SocketStream::write(const std::string& data)
+void Socket::send(const std::string& data)
 {
-	write(data.data(), data.size());
-}
-
-void SocketStream::write(const char* buf, const uint32_t length)
-{
-	if (0 == length)
+	if (data.empty())
 	{
 		throw std::exception("Can't send empty buffer");
 	}
 
-	if (SOCKET_ERROR == ::send(_sock, buf, length, 0))
+	if (SOCKET_ERROR == ::send(_sock, data.data(), data.size(), 0))
 	{
 		throw std::exception("Send data failed");
 	}
 }
 
-SOCKET SocketStream::_connect_to_host(const Host& host)
+SOCKET Socket::_connect_to_host(const Host& host)
 {
 	SOCKET sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (INVALID_SOCKET == sock)

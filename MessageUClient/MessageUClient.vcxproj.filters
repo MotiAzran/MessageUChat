@@ -8,9 +8,6 @@
     <ClCompile Include="IPAddress.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="SocketStream.cpp">
-      <Filter>Stream</Filter>
-    </ClCompile>
     <ClCompile Include="AESWrapper.cpp">
       <Filter>CryptoWrappers</Filter>
     </ClCompile>
@@ -62,6 +59,9 @@
     <ClCompile Include="Request.cpp">
       <Filter>Request</Filter>
     </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
     <ClCompile Include="SendMessageRequest.cpp">
       <Filter>Request</Filter>
     </ClCompile>
@@ -70,9 +70,6 @@
   <ItemGroup>
     <Filter Include="Network">
       <UniqueIdentifier>{a5a65ed7-760b-4171-bfbd-ffa7380cea58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Stream">
-      <UniqueIdentifier>{a9c1e584-87f2-4c9e-b93d-29aa234b8bc3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{b468b3b7-f90f-48b5-bc6c-c2632d3e103a}</UniqueIdentifier>
@@ -108,12 +105,6 @@
     </ClInclude>
     <ClInclude Include="IPAddress.h">
       <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="SocketStream.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="Stream.h">
-      <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Common</Filter>
@@ -198,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="SendSymetricKeyRequest.h">
       <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket.h">
+      <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="RegisterRequest.h">
       <Filter>Request</Filter>

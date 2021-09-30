@@ -58,10 +58,10 @@ Client::Client(const std::string& name, const Types::ClientID& identifier, const
 
 void Client::get_clients_list(const Types::Host& host)
 {
-	SocketStream sock(host);
+	Socket sock(host);
 
 	Protocol::GetClientsListRequest request(_id, Common::VERSION);
-	sock.write(request.serialize());
+	sock.send(request.serialize());
 
 	Protocol::ClientsListResponse response(&sock);
 	if (response.is_done())
@@ -85,10 +85,10 @@ void Client::get_client_public_key(const Types::Host& host)
 	// Send request
 	auto client = _get_client_from_user();
 
-	SocketStream sock(host);
+	Socket sock(host);
 
 	Protocol::GetPublicKeyRequest request(_id, Common::VERSION, client.id);
-	sock.write(request.serialize());
+	sock.send(request.serialize());
 
 	// Receive response
 	Protocol::GetPublicKeyResponse response(&sock);
@@ -102,10 +102,10 @@ void Client::get_client_public_key(const Types::Host& host)
 
 void Client::get_waiting_messages(const Types::Host& host)
 {
-	SocketStream sock(host);
+	Socket sock(host);
 
 	Protocol::GetWaitingMessagesRequest request(_id, Common::VERSION);
-	sock.write(request.serialize());
+	sock.send(request.serialize());
 
 	Protocol::GetWaitingMessagesResponse response(&sock);
 	if (response.is_done())
@@ -132,10 +132,10 @@ void Client::send_text_message(const Types::Host& host)
 	std::cout << "Enter message: ";
 	std::getline(std::cin, message);
 
-	SocketStream sock(host);
+	Socket sock(host);
 
 	Protocol::SendTextMessageRequest request(_id, Common::VERSION, client.id, client.aes.encrypt(message));
-	sock.write(request.serialize());
+	sock.send(request.serialize());
 
 	Protocol::SendMessageResponse response(&sock);
 	if (response.client_id != client.id)
@@ -148,10 +148,10 @@ void Client::request_symetric_key(const Types::Host& host)
 {
 	auto client = _get_client_from_user();
 
-	SocketStream sock(host);
+	Socket sock(host);
 
 	Protocol::RequestSymetricKeyRequest request(_id, Common::VERSION, client.id);
-	sock.write(request.serialize());
+	sock.send(request.serialize());
 
 	Protocol::SendMessageResponse response(&sock);
 	if (response.client_id != client.id)
@@ -169,10 +169,10 @@ void Client::send_symetric_key(const Types::Host& host)
 		return;
 	}
 
-	SocketStream sock(host);
+	Socket sock(host);
 
 	Protocol::SendSymetricKeyRequest request(_id, Common::VERSION, client.id, client.rsapub.encrypt(_aes.getKey()));
-	sock.write(request.serialize());
+	sock.send(request.serialize());
 
 	Protocol::SendMessageResponse response(&sock);
 	if (response.client_id != client.id)

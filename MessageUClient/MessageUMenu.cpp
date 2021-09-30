@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-#include "SocketStream.h"
+#include "Socket.h"
 #include "StringUtils.h"
 #include "Exceptions.h"
 #include "RegisterRequest.h"
@@ -70,11 +70,11 @@ void MessageUMenu::_register()
 	RSAPrivateWrapper rsapriv;
 
 	// Create connection with the server
-	SocketStream sock(_server_host);
+	Socket sock(_server_host);
 
 	// Send request
 	Protocol::RegisterRequest request(Types::ClientID(), Common::VERSION, client_name, rsapriv.getPublicKey());
-	sock.write(request.serialize());
+	sock.send(request.serialize());
 
 	Protocol::RegisterResponse response(&sock);
 

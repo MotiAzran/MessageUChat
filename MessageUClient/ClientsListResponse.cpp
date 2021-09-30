@@ -23,7 +23,7 @@ ClientsListResponse::ClientEntry ClientsListResponse::get_next_entry()
 		throw std::out_of_range("No more clients entries");
 	}
 
-	Deserializer entry(_stream->read(ClientEntry::SIZE));
+	Deserializer entry(_stream->receive(ClientEntry::SIZE));
 	--_remaining_entries;
 
 	Types::ClientID id = entry.read_client_id();
