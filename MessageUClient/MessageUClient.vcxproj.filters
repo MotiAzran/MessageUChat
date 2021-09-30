@@ -41,12 +41,6 @@
     <ClCompile Include="MessageUMenu.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
-    <ClCompile Include="RSAStream.cpp">
-      <Filter>Stream</Filter>
-    </ClCompile>
-    <ClCompile Include="AESStream.cpp">
-      <Filter>Stream</Filter>
-    </ClCompile>
     <ClCompile Include="Deserializer.cpp">
       <Filter>Serializer</Filter>
     </ClCompile>
@@ -158,12 +152,6 @@
     </ClInclude>
     <ClInclude Include="Exceptions.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="RSAStream.h">
-      <Filter>Stream</Filter>
-    </ClInclude>
-    <ClInclude Include="AESStream.h">
-      <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="Deserializer.h">
       <Filter>Serializer</Filter>

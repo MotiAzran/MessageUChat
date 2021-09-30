@@ -143,7 +143,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AESStream.cpp" />
     <ClCompile Include="AESWrapper.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -171,7 +170,6 @@
     <ClCompile Include="ProtocolUtils.cpp" />
     <ClCompile Include="RegisterResponse.cpp" />
     <ClCompile Include="Response.cpp" />
-    <ClCompile Include="RSAStream.cpp" />
     <ClCompile Include="RSAWrapper.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -184,7 +182,6 @@
     <ClCompile Include="StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AESStream.h" />
     <ClInclude Include="AESWrapper.h" />
     <ClInclude Include="AutoWSA.h" />
     <ClInclude Include="Base64Wrapper.h" />
@@ -204,7 +201,6 @@
     <ClInclude Include="ProtocolUtils.h" />
     <ClInclude Include="RegisterResponse.h" />
     <ClInclude Include="Response.h" />
-    <ClInclude Include="RSAStream.h" />
     <ClInclude Include="RSAWrapper.h" />
     <ClInclude Include="SendMessageResponse.h" />
     <ClInclude Include="Serializer.h" />
