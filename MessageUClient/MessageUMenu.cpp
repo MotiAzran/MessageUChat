@@ -1,7 +1,6 @@
 #include <iostream>
-#include <sstream>
+#include <fstream>
 #include <filesystem>
-#include "FileStream.h"
 #include "SocketStream.h"
 #include "StringUtils.h"
 #include "Exceptions.h"
@@ -91,15 +90,15 @@ void MessageUMenu::_write_client_info()
 		throw std::exception("Unexpected error!");
 	}
 
-	FileStream info_file(Common::CLIENT_INFO_FILE_PATH);
+	std::ofstream info_file(Common::CLIENT_INFO_FILE_PATH);
 
-	info_file.write(_client->get_name() + "\n");
+	info_file << _client->get_name() << std::endl;
 
 	std::string encoded_id = HexWrapper::encode(StringUtils::to_string(_client->get_id()));
-	info_file.write(encoded_id + "\n");
+	info_file << encoded_id << std::endl;
 
 	std::string encoded_private_key = Base64Wrapper::encode(_client->get_private_key());
-	info_file.write(encoded_private_key);
+	info_file << encoded_private_key;
 }
 
 MessageUMenu::ActionFunc MessageUMenu::_get_client_action(const Client::ActionFunc& func)
@@ -145,20 +144,17 @@ Types::Host MessageUMenu::_get_server_host_from_file()
 		throw std::exception("Server info not found");
 	}
 
-	FileStream server_info(Common::SERVER_INFO_PATH);
-	auto info = server_info.read(server_info.get_file_size());
-	if (info.empty())
+	std::ifstream server_info(Common::SERVER_INFO_PATH);
+	if (!server_info.is_open() || 0 == std::filesystem::file_size(Common::SERVER_INFO_PATH))
 	{
 		throw std::exception("Server info not found");
 	}
 
-	std::stringstream info_stream(info);
-
 	std::string ip_str;
-	std::getline(info_stream, ip_str, ':');
+	std::getline(server_info, ip_str, ':');
 
 	std::string port_str;
-	info_stream >> port_str;
+	server_info >> port_str;
 	if (!StringUtils::is_number(port_str))
 	{
 		throw std::exception("Invalid port");
@@ -177,7 +173,7 @@ Client* MessageUMenu::_get_client_from_file()
 {
 	if (std::filesystem::exists(Common::CLIENT_INFO_FILE_PATH))
 	{
-		return Client::client_from_file(FileStream(Common::CLIENT_INFO_FILE_PATH));
+		return Client::client_from_file(Common::CLIENT_INFO_FILE_PATH);
 	}
 
 	return nullptr;

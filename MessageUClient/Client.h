@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <string>
-#include "FileStream.h"
 #include "SocketStream.h"
 #include "RSAWrapper.h"
 #include "AESWrapper.h"
@@ -14,8 +13,7 @@ class Client
 public:
 	using ActionFunc = void(Client::*)(const Types::Host&);
 
-	static Client* client_from_file(FileStream& info_file);
-	static Client* client_from_file(FileStream&& info_file);
+	static Client* client_from_file(const std::filesystem::path& path);
 
 public:
 	Client(const std::string& name, const Types::ClientID& identifier, const std::string& private_key);

@@ -1,4 +1,4 @@
-#include <sstream>
+#include <fstream>
 #include "StringUtils.h"
 #include "Serializer.h"
 #include "Base64Wrapper.h"
@@ -10,24 +10,17 @@
 #include "SendMessageResponse.h"
 #include "Client.h"
 
-std::string decode_private_key(const std::string& encoded_private_key)
+Client* Client::client_from_file(const std::filesystem::path& path)
 {
-	return Base64Wrapper::decode(encoded_private_key);
-}
-
-Client* Client::client_from_file(FileStream& info_file)
-{
-	auto info = info_file.read(info_file.get_file_size());
-	if (info.empty())
+	std::ifstream info_file(path);
+	if (!info_file.is_open() || 0 == std::filesystem::file_size(path))
 	{
 		throw std::exception("Client info not found");
 	}
-	
-	std::stringstream info_stream(info);
 
 	// Get name from file first line
 	std::string name;
-	std::getline(info_stream, name);
+	std::getline(info_file, name);
 	if (name.size() > Common::MAX_CLIENT_NAME_LENGTH)
 	{
 		throw std::exception("Invalid file name");
@@ -35,22 +28,17 @@ Client* Client::client_from_file(FileStream& info_file)
 
 	// Get client ID from file second line
 	std::string identifier;
-	std::getline(info_stream, identifier);
+	std::getline(info_file, identifier);
 	if (identifier.size() != Common::CLIENT_ID_STR_LENGTH)
 	{
 		throw std::exception("Invalid user indentifier");
 	}
 
 	// Get private key from the rest of the file
-	std::string encoded_private_key(std::istreambuf_iterator<char>(info_stream), {});
-	auto private_key = decode_private_key(encoded_private_key);
+	std::string encoded_private_key(std::istreambuf_iterator<char>(info_file), {});
+	auto private_key = Base64Wrapper::decode(encoded_private_key);
 
 	return new Client(name, StringUtils::to_client_id(identifier), private_key);
-}
-
-Client* Client::client_from_file(FileStream&& info_file)
-{
-	return Client::client_from_file(info_file);
 }
 
 Client::Client(const std::string& name, const Types::ClientID& identifier, const std::string& private_key) :

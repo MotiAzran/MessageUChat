@@ -160,7 +160,6 @@
     <ClCompile Include="ClientsList.cpp" />
     <ClCompile Include="ClientsListResponse.cpp" />
     <ClCompile Include="Deserializer.cpp" />
-    <ClCompile Include="FileStream.cpp" />
     <ClCompile Include="GetPublicKeyResponse.cpp" />
     <ClCompile Include="GetWaitingMessagesResponse.cpp" />
     <ClCompile Include="HexWrapper.cpp" />
@@ -191,7 +190,6 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Deserializer.h" />
     <ClInclude Include="Exceptions.h" />
-    <ClInclude Include="FileStream.h" />
     <ClInclude Include="GetPublicKeyResponse.h" />
     <ClInclude Include="GetWaitingMessagesResponse.h" />
     <ClInclude Include="HexWrapper.h" />

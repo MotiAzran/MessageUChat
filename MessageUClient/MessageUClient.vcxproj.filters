@@ -8,9 +8,6 @@
     <ClCompile Include="IPAddress.cpp">
       <Filter>Network</Filter>
     </ClCompile>
-    <ClCompile Include="FileStream.cpp">
-      <Filter>Stream</Filter>
-    </ClCompile>
     <ClCompile Include="SocketStream.cpp">
       <Filter>Stream</Filter>
     </ClCompile>
@@ -104,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="IPAddress.h">
       <Filter>Network</Filter>
-    </ClInclude>
-    <ClInclude Include="FileStream.h">
-      <Filter>Stream</Filter>
     </ClInclude>
     <ClInclude Include="SocketStream.h">
       <Filter>Stream</Filter>
