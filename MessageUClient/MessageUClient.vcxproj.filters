@@ -32,9 +32,6 @@
     <ClCompile Include="StringUtils.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ProtocolUtils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="MessageUMenu.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
@@ -68,6 +65,7 @@
     <ClCompile Include="SendMessageRequest.cpp">
       <Filter>Request</Filter>
     </ClCompile>
+    <ClCompile Include="RegisterRequest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Network">
@@ -141,9 +139,6 @@
     <ClInclude Include="StringUtils.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="ProtocolUtils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="MessageUMenu.h">
       <Filter>Menu</Filter>
     </ClInclude>
@@ -202,6 +197,9 @@
       <Filter>Request</Filter>
     </ClInclude>
     <ClInclude Include="SendSymetricKeyRequest.h">
+      <Filter>Request</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterRequest.h">
       <Filter>Request</Filter>
     </ClInclude>
   </ItemGroup>

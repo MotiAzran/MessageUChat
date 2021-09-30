@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 #include "SocketStream.h"
+#include "ProtocolCommon.h"
 #include "RSAWrapper.h"
 #include "AESWrapper.h"
 #include "ClientsList.h"

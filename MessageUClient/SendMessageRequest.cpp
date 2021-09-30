@@ -1,7 +1,9 @@
 #include "Serializer.h"
 #include "SendMessageRequest.h"
 
-std::string Protocol::SendMessageRequest::_serialize_payload(const Types::ClientID& other_client_id, const Protocol::MessageType message_type, std::string&& message_content)
+using namespace Protocol;
+
+std::string SendMessageRequest::_serialize_payload(const Types::ClientID& other_client_id, const Protocol::MessageType message_type, std::string&& message_content)
 {
 	Serializer payload;
 

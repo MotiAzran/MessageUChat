@@ -2,7 +2,6 @@
 #include "StringUtils.h"
 #include "Serializer.h"
 #include "Base64Wrapper.h"
-#include "ProtocolUtils.h"
 #include "Exceptions.h"
 #include "Client.h"
 
@@ -98,7 +97,7 @@ void Client::get_client_public_key(const Types::Host& host)
 		throw ServerErrorException();
 	}
 
-	_clients.update(client.id, response.rsapub);
+	_clients.update(client.id, response.public_key);
 }
 
 void Client::get_waiting_messages(const Types::Host& host)

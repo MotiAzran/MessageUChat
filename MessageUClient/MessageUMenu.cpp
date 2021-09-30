@@ -4,7 +4,7 @@
 #include "SocketStream.h"
 #include "StringUtils.h"
 #include "Exceptions.h"
-#include "ProtocolUtils.h"
+#include "RegisterRequest.h"
 #include "RegisterResponse.h"
 #include "HexWrapper.h"
 #include "Base64Wrapper.h"
@@ -73,9 +73,8 @@ void MessageUMenu::_register()
 	SocketStream sock(_server_host);
 
 	// Send request
-	Protocol::Utils::send_request_header(&sock, Types::ClientID(), Protocol::RequestCode::Register, Common::MAX_CLIENT_NAME_LENGTH + Common::PUBLIC_KEY_SIZE);
-	sock.write(client_name, Common::MAX_CLIENT_NAME_LENGTH);
-	sock.write(rsapriv.getPublicKey());
+	Protocol::RegisterRequest request(Types::ClientID(), Common::VERSION, client_name, rsapriv.getPublicKey());
+	sock.write(request.serialize());
 
 	Protocol::RegisterResponse response(&sock);
 

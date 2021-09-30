@@ -21,8 +21,8 @@ public:
 		AESWrapper aes;
 
 		ClientField(const Types::ClientID& id, const std::string& name,
-			const Types::PublicKey& rsapub, const Types::AESKey& aes) :
-			id(id), name(name), rsapub(rsapub), aes(aes) {}
+			const Types::PublicKey& public_key, const Types::AESKey& aes) :
+			id(id), name(name), rsapub(public_key), aes(aes) {}
 
 		ClientField(const MapKey& key, const MapValue& value) :
 			id(std::get<Types::ClientID>(key)), name(std::get<std::string>(key)),
@@ -34,7 +34,7 @@ public:
 	virtual ~ClientsList() = default;
 
 	void insert(const Types::ClientID& id, const std::string& name,
-		const Types::PublicKey& rsapub, const Types::AESKey& aes);
+		const Types::PublicKey& public_key, const Types::AESKey& aes);
 	void insert(const Types::ClientID& id, const std::string& name);
 	
 	template <typename Key, typename Val,

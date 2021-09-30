@@ -166,7 +166,7 @@
     <ClCompile Include="IPAddress.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MessageUMenu.cpp" />
-    <ClCompile Include="ProtocolUtils.cpp" />
+    <ClCompile Include="RegisterRequest.cpp" />
     <ClCompile Include="RegisterResponse.cpp" />
     <ClCompile Include="Request.cpp" />
     <ClCompile Include="Response.cpp" />
@@ -201,7 +201,7 @@
     <ClInclude Include="IPAddress.h" />
     <ClInclude Include="MessageUMenu.h" />
     <ClInclude Include="ProtocolCommon.h" />
-    <ClInclude Include="ProtocolUtils.h" />
+    <ClInclude Include="RegisterRequest.h" />
     <ClInclude Include="RegisterResponse.h" />
     <ClInclude Include="Request.h" />
     <ClInclude Include="RequestSymetricKeyRequest.h" />
