@@ -12,7 +12,7 @@
 
 namespace Common
 {
-	static const uint8_t VERSION = 2;
+	static const uint8_t VERSION = 1;
 
 	static const auto MAX_CLIENT_NAME_LENGTH = 255;
 	static const auto PUBLIC_KEY_SIZE = 160;
