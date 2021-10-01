@@ -7,7 +7,7 @@ std::string Request::serialize() const
 {
 	Serializer request;
 
-	request.add(id, version, code, payload_size, payload);
+	request.add(id, version, code, static_cast<uint32_t>(payload.size()), payload);
 
 	return request.serialize();
 }

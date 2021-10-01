@@ -7,7 +7,7 @@ namespace Protocol
 {
 	struct GetPublicKeyResponse : public Response
 	{
-		GetPublicKeyResponse(const Types::ReaderFunc& reader);
+		explicit GetPublicKeyResponse(const Types::ReaderFunc& reader);
 		virtual ~GetPublicKeyResponse() = default;
 
 		Types::ClientID client_id;

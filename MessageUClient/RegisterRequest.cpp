@@ -1,7 +1,7 @@
 #include "Serializer.h"
 #include "RegisterRequest.h"
 
-std::string Protocol::RegisterRequest::_serialize_payload(const std::string& name, const std::string& public_key)
+std::string Protocol::RegisterRequest::_serialize_payload(const std::string& name, const Types::PublicKey& public_key)
 {
 	Serializer payload;
 

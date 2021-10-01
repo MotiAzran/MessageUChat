@@ -5,7 +5,7 @@
 using namespace Protocol;
 
 SendMessageResponse::SendMessageResponse(const Types::ReaderFunc& reader) :
-	Response(reader(Response::HEADER_SIZE))
+	Response(reader)
 {
 	const auto expected_payload_size = Common::CLIENT_ID_SIZE_BYTES + sizeof(uint32_t);
 	if (expected_payload_size != payload_size ||

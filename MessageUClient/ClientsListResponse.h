@@ -10,7 +10,7 @@ namespace Protocol
 	class ClientsListResponse : public Response
 	{
 	public:
-		ClientsListResponse(const Types::ReaderFunc& reader);
+		explicit ClientsListResponse(const Types::ReaderFunc& reader);
 		virtual ~ClientsListResponse() = default;
 
 		ClientEntry get_next_entry();

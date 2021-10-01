@@ -10,12 +10,13 @@ RSAPublicWrapper::RSAPublicWrapper(const std::string& key)
 	_publicKey.Load(ss);
 }
 
-std::string RSAPublicWrapper::getPublicKey() const
+Types::PublicKey RSAPublicWrapper::getPublicKey() const
 {
 	std::string key;
 	CryptoPP::StringSink ss(key);
 	_publicKey.Save(ss);
-	return key;
+	
+	return StringUtils::to_public_key(key);
 }
 
 std::string RSAPublicWrapper::encrypt(const std::string& plain)
@@ -50,13 +51,14 @@ std::string RSAPrivateWrapper::getPrivateKey() const
 	return key;
 }
 
-std::string RSAPrivateWrapper::getPublicKey() const
+Types::PublicKey RSAPrivateWrapper::getPublicKey() const
 {
 	CryptoPP::RSAFunction publicKey(_privateKey);
 	std::string key;
 	CryptoPP::StringSink ss(key);
 	publicKey.Save(ss);
-	return key;
+
+	return StringUtils::to_public_key(key);
 }
 
 std::string RSAPrivateWrapper::decrypt(const std::string& cipher)

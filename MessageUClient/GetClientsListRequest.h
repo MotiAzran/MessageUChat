@@ -7,6 +7,6 @@ namespace Protocol
 	struct GetClientsListRequest : public Request
 	{
 		GetClientsListRequest(const Types::ClientID& id, const uint8_t version) :
-			Request(id, version, RequestCode::ClientsList, std::string()) {}
+			Request(id, version, RequestCode::ClientsList) {}
 	};
 }

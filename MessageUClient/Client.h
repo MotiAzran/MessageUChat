@@ -11,7 +11,7 @@
 class Client
 {
 public:
-	using ActionFunc = void(Client::*)(const Types::Host&);
+	using HandlerFunc = void(Client::*)(const Types::Host&);
 
 	static Client* client_from_file(const std::filesystem::path& path);
 
@@ -24,8 +24,9 @@ public:
 	std::string get_name() const { return _name; }
 	Types::ClientID get_id() const { return _id; }
 	std::string get_private_key() const { return _rsapriv.getPrivateKey(); }
-	std::string get_public_key() const { return _rsapriv.getPublicKey(); }
+	Types::PublicKey get_public_key() const { return _rsapriv.getPublicKey(); }
 
+	// Handlers
 	void get_clients_list(const Types::Host& host);
 	void get_client_public_key(const Types::Host& host);
 	void get_waiting_messages(const Types::Host& host);

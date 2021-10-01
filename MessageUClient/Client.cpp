@@ -186,7 +186,6 @@ ClientsList::ClientField Client::_get_client_from_user()
 {
 	char client_name[Common::MAX_CLIENT_NAME_LENGTH] = { 0 };
 	std::cout << "Enter client name: ";
-	std::cin.ignore();
 	std::cin.getline(client_name, Common::MAX_CLIENT_NAME_LENGTH);
 
 	return _clients.get_client(std::string(client_name));

@@ -6,7 +6,7 @@
 using namespace Protocol;
 
 RegisterResponse::RegisterResponse(const Types::ReaderFunc& reader) :
-	Response(reader(Response::HEADER_SIZE))
+	Response(reader)
 {
 	const auto expected_payload_size = Common::CLIENT_ID_SIZE_BYTES;
 	if (code != ResponseCode::RegisterSuccess ||

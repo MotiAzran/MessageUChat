@@ -7,7 +7,7 @@ namespace Protocol
 	struct SendMessageRequest : public Request
 	{
 		SendMessageRequest(const Types::ClientID& id, const uint8_t version, const Types::ClientID& dst_client_id,
-			const Protocol::MessageType message_type, std::string&& message_content) :
+			const Protocol::MessageType message_type, std::string&& message_content=std::string()) :
 			Request(id, version, RequestCode::SendMessageToUser,
 				_serialize_payload(dst_client_id, message_type, std::move(message_content))) {}
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <array>
 #include <type_traits>
 #include "StringUtils.h"
 
@@ -11,9 +12,8 @@ public:
 	virtual ~Serializer() = default;
 
 	std::string serialize() const { return _data; }
-	uint32_t get_serialized_data_size() const { return _data.size(); }
 
-	template <typename Val, typename = std::enable_if_t<std::is_pod_v<Val>>>
+	template <typename Val>
 	void add(Val item)
 	{
 		_data += StringUtils::to_string(item);
@@ -22,11 +22,11 @@ public:
 	template <typename... TArgs>
 	void add(TArgs... items)
 	{
+		// Add items to serializer by the parameter order
 		(add(items), ...);
 	}
 
 	void add(const std::string& str);
-	void add(const Types::ClientID& id);
 
 private:
 	std::string _data;

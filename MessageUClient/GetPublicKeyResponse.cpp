@@ -5,7 +5,7 @@
 using namespace Protocol;
 
 Protocol::GetPublicKeyResponse::GetPublicKeyResponse(const Types::ReaderFunc& reader) :
-	Response(reader(Response::HEADER_SIZE))
+	Response(reader)
 {
 	const auto expected_payload_size = Common::CLIENT_ID_SIZE_BYTES + Common::PUBLIC_KEY_SIZE;
 	if (code != Protocol::ResponseCode::PublicKeySent ||

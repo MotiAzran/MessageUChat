@@ -8,20 +8,21 @@ int main()
 	try
 	{
 		AutoWSA wsa;
-		MessageUMenu client;
+		MessageUMenu menu;
 
 		std::cout << "MessageU client at your service." << std::endl;
 		while (true)
 		{
-			client.print_menu();
+			menu.print();
 
 			uint32_t client_choice = 0;
 			std::cout << "? ";
 			std::cin >> client_choice;
+			std::cin.ignore();
 
 			try
 			{
-				client.handle_choice(client_choice);
+				menu.handle_choice(client_choice);
 			}
 			catch (const ExitException&)
 			{

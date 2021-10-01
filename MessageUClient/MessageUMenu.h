@@ -7,8 +7,8 @@
 
 class MessageUMenu
 {
-	using ActionFunc = std::function<void()>;
-	using ChoicePair = std::pair<ActionFunc, std::string>;
+	using HandlerFunc = std::function<void()>;
+	using ChoicePair = std::pair<HandlerFunc, std::string>;
 
 	enum class MenuChoice : uint32_t
 	{
@@ -29,14 +29,16 @@ public:
 	Client* get_client() const { return _client; }
 	Types::Host get_server_host() const { return _server_host; }
 
-	void print_menu();
+	void print() const;
 	void handle_choice(const uint32_t choice);
 
 private:
 	void _register();
+	bool _is_client_name_valid(const std::string& name);
+	std::string _get_client_name();
 	void _write_client_info();
-	ActionFunc _get_client_action(const Client::ActionFunc& func);
-	ActionFunc _get_choice_handler(const MenuChoice choice);
+	HandlerFunc _generate_client_handler_func(const Client::HandlerFunc& func);
+	HandlerFunc _get_choice_handler(const MenuChoice choice);
 
 	static Types::Host _get_server_host_from_file();
 	static Client* _get_client_from_file();
