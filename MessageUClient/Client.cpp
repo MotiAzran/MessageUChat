@@ -90,7 +90,7 @@ void Client::get_client_public_key(const Types::Host& host)
 
 	Protocol::send_request(sock, Protocol::GetPublicKeyRequest(_id, Common::VERSION, client.id));
 
-	auto response = Protocol::receive_response< Protocol::GetPublicKeyResponse>(sock);
+	auto response = Protocol::receive_response<Protocol::GetPublicKeyResponse>(sock);
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();
@@ -113,7 +113,7 @@ void Client::get_waiting_messages(const Types::Host& host)
 
 	while (!response.is_done())
 	{
-		_print_message(response.read_next_message());
+		_handle_message(response.read_next_message());
 	}
 }
 
@@ -132,7 +132,8 @@ void Client::send_text_message(const Types::Host& host)
 
 	Socket sock(host);
 
-	Protocol::send_request(sock, Protocol::SendTextMessageRequest(_id, Common::VERSION, client.id, AESWrapper(client.aes_key).encrypt(message)));
+	Protocol::send_request(sock, Protocol::SendTextMessageRequest(_id, Common::VERSION, client.id,
+		AESWrapper(client.aes_key).encrypt(message)));
 
 	auto response = Protocol::receive_response<Protocol::SendMessageResponse>(sock);
 	if (response.client_id != client.id)
@@ -185,7 +186,7 @@ ClientsList::ClientField Client::_get_client_from_user()
 	return _clients.get_client(std::string(client_name));
 }
 
-void Client::_print_message(Protocol::MessageEntry&& message)
+void Client::_handle_message(Protocol::MessageEntry&& message)
 {
 	auto client = _clients.get_client(message.client_id);
 	std::cout << "From: " << client.name << std::endl;
