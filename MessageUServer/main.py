@@ -8,7 +8,7 @@ import socket
 class MessageUServer(object):
     def __init__(self):
         self._host = (SERVER_IP, self.get_server_port())
-        self._sock = self.initialize_server(self._host)
+        self._sock = self.initialize_server_socket(self._host)
 
         ServerDatabase.initialize_database()
 
@@ -23,7 +23,7 @@ class MessageUServer(object):
         return int(data)
 
     @staticmethod
-    def initialize_server(host):
+    def initialize_server_socket(host):
         sock = socket.socket()
         sock.bind(host)
         sock.listen(5)

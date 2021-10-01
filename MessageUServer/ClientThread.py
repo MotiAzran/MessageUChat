@@ -4,6 +4,9 @@ import struct
 
 
 class ClientThread(Thread):
+    """
+    Thread to handle client request session
+    """
     def __init__(self, sock):
         super().__init__()
         self._sock = sock
@@ -19,9 +22,6 @@ class ClientThread(Thread):
 
     def run(self):
         client_id, version, code, payload_size = self._get_request_header()
-        if not ServerDatabase.is_client_id_exists(client_id):
-            send_general_error(self._sock)
-            return
 
         if code in self._handlers:
             try:

@@ -18,17 +18,17 @@ def send_general_error(sock):
 
 def register_handler(sock, client_id, payload_size):
     REGISTER_CODE = 2000
-    PAYLOAD_PATTERN = "<255s160s"
+    REQUEST_PAYLOAD_PATTERN = "<255s160s"
 
-    if payload_size != struct.calcsize(PAYLOAD_PATTERN):
+    if payload_size != struct.calcsize(REQUEST_PAYLOAD_PATTERN):
         raise Exception("Got invalid payload")
 
     # Read payload
-    name, pub_key = struct.unpack(PAYLOAD_PATTERN, sock.recv(payload_size))
+    name, pub_key = struct.unpack(REQUEST_PAYLOAD_PATTERN, sock.recv(payload_size))
     name = name.decode().strip('\0')
 
     # Write new user to database
-    client = Client.create_user(name, pub_key)
+    client = Client.create_client(name, pub_key)
     ServerDatabase.register_client(client)
 
     # Send response
@@ -39,6 +39,9 @@ def register_handler(sock, client_id, payload_size):
 def send_clients_list(sock, client_id, payload_size):
     SEND_LIST_CODE = 2001
     CLIENT_ENTRY_PATTERN = "<16s255s"
+
+    if not ServerDatabase.is_client_id_exists(client_id):
+        raise Exception("Unregistered client")
 
     if payload_size != 0:
         raise Exception("Got invalid payload")
@@ -61,6 +64,9 @@ def send_public_key(sock, client_id, payload_size):
     REQUEST_PAYLOAD_PATTERN = "<16s"
     RESPONSE_PAYLOAD_PATTERN = "<16s160s"
 
+    if not ServerDatabase.is_client_id_exists(client_id):
+        raise Exception("Unregistered client")
+
     if payload_size != struct.calcsize(REQUEST_PAYLOAD_PATTERN):
         raise Exception("Got invalid payload")
 
@@ -74,6 +80,9 @@ def send_public_key(sock, client_id, payload_size):
 def send_waiting_messages(sock, client_id, payload_size):
     SEND_WAITING_MESSAGES_CODE = 2004
     RESPONSE_PAYLOAD_PATTERN = "<16sLBL"
+
+    if not ServerDatabase.is_client_id_exists(client_id):
+        raise Exception("Unregistered client")
 
     if 0 != payload_size:
         raise Exception("Got invalid payload")
@@ -98,6 +107,9 @@ def send_message(sock, client_id, payload_size):
     SEND_MESSAGE_CODE = 2003
     REQUEST_PAYLOAD_PATTERN = "<16sBL"
     RESPONSE_PAYLOAD_PATTERN = "<16sL"
+
+    if not ServerDatabase.is_client_id_exists(client_id):
+        raise Exception("Unregistered client")
 
     if struct.calcsize(REQUEST_PAYLOAD_PATTERN) > payload_size:
         raise Exception("Got invalid payload")

@@ -12,6 +12,22 @@ class Client(object):
         self._public_key = public_key
         self._last_seen = last_seen
 
+    @classmethod
+    def create_client(cls, name, public_key):
+        """
+        Create new client instance
+        :param name: Client name
+        :param public_key: Client public key
+        :return: Client
+        """
+        if len(name) > cls.MAX_USER_NAME:
+            raise ValueError("User name too long")
+
+        if ServerDatabase.is_client_name_exists(name):
+            raise ValueError("User name exists")
+
+        return cls(uuid.uuid4().bytes_le, name, public_key, datetime.datetime.now())
+
     @property
     def name(self):
         return self._name
@@ -27,13 +43,3 @@ class Client(object):
     @property
     def last_seen(self):
         return self._last_seen
-
-    @classmethod
-    def create_user(cls, name, public_key):
-        if len(name) > cls.MAX_USER_NAME:
-            raise ValueError("User name too long")
-
-        if ServerDatabase.is_client_name_exists(name):
-            raise ValueError("User name exists")
-
-        return cls(uuid.uuid4().bytes_le, name, public_key, datetime.datetime.now())

@@ -29,6 +29,14 @@ class Message(object):
 
     @classmethod
     def create_new_message(cls, to_id, from_id, message_type, content):
+        """
+        Create new message instance
+        :param to_id: ID of the message receiver
+        :param from_id: ID of the message sender
+        :param message_type: Message type
+        :param content: Message content
+        :return: Message
+        """
         with cls.counter_lock:
             id_ = cls.message_counter
             cls.message_counter += 1
