@@ -1,5 +1,6 @@
 #define NOMINMAX
 
+#include <algorithm>
 #include "Deserializer.h"
 
 Deserializer::Deserializer(std::string&& data) : 
@@ -17,7 +18,7 @@ std::string Deserializer::read(const uint32_t size)
 		return std::string();
 	}
 
-	uint32_t size_to_read = std::min(size, _data.size());
+	uint32_t size_to_read = std::min(size, static_cast<uint32_t>(_data.size()));
 	std::string read_data(_data.begin(), _data.begin() + size_to_read);
 
 	_data.erase(0, size_to_read);

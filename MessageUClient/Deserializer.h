@@ -13,7 +13,7 @@ public:
 	explicit Deserializer(std::string&& data);
 	virtual ~Deserializer() = default;
 
-	uint32_t size() const { return _data.size(); }
+	uint32_t size() const { return static_cast<uint32_t>(_data.size()); }
 
 	std::string read(const uint32_t size);
 

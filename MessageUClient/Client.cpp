@@ -1,3 +1,4 @@
+#include <iostream>
 #include <fstream>
 #include "Socket.h"
 #include "StringUtils.h"
