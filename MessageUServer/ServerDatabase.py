@@ -36,18 +36,26 @@ def _execute_command(*args, **kwargs):
         return c.execute(*args, **kwargs)
 
 
-def _execute_commands(commands):
-    """
-    Execute commands without getting commands output
-    """
-    with sqlite3.connect(DATABASE_PATH) as db:
-        c = db.cursor()
-        for command in commands:
-            c.execute(command)
+@database_write
+def create_clients_table():
+    _execute_command(f'''CREATE TABLE {CLIENTS_TABLE_NAME}(ID TEXT PRIMARY KEY,
+            Name TEXT UNIQUE,
+            PublicKey TEXT NOT NULL,
+            LastSeen TIMESTAMP);''')
+
+
+@database_write
+def create_messages_table():
+    _execute_command(f'''CREATE TABLE {MESSAGES_TABLE_NAME}(ID INT PRIMARY KEY,
+            ToClient TEXT,
+            FromClient TEXT,
+            Type int,
+            Content BLOB NOT NULL,
+            FOREIGN KEY (ToClient, FromClient) REFERENCES Clients (ID, ID));''')
 
 
 @database_read
-def _is_table_exists(table_name):
+def is_table_exists(table_name):
     """
     Checks if given table exists
     :param table_name: Table name to check
@@ -61,24 +69,11 @@ def initialize_database():
     """
     Create database tables
     """
-    commands = []
-    if not _is_table_exists(CLIENTS_TABLE_NAME):
-        commands.append(f'''CREATE TABLE {CLIENTS_TABLE_NAME}(ID TEXT PRIMARY KEY,
-            Name TEXT UNIQUE,
-            PublicKey TEXT NOT NULL,
-            LastSeen TIMESTAMP);''')
+    if not is_table_exists(CLIENTS_TABLE_NAME):
+        create_clients_table()
 
-    if not _is_table_exists(MESSAGES_TABLE_NAME):
-        commands.append(f'''CREATE TABLE {MESSAGES_TABLE_NAME}(ID INT PRIMARY KEY,
-            ToClient TEXT,
-            FromClient TEXT,
-            Type int,
-            Content BLOB NOT NULL,
-            FOREIGN KEY (ToClient, FromClient) REFERENCES Clients (ID, ID));''')
-
-    if commands != []:
-        with database_lock.lock_write():
-            _execute_commands(commands)
+    if not is_table_exists(MESSAGES_TABLE_NAME):
+        create_messages_table()
 
 
 @database_read

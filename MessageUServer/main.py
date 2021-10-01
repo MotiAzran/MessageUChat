@@ -30,6 +30,14 @@ class MessageUServer(object):
 
         return sock
 
+    @staticmethod
+    def initialize_database():
+        if not ServerDatabase.is_table_exists(ServerDatabase.CLIENTS_TABLE_NAME):
+            ServerDatabase.create_clients_table()
+
+        if not ServerDatabase.is_table_exists(ServerDatabase.MESSAGES_TABLE_NAME):
+            ServerDatabase.create_messages_table()
+
     def serve(self):
         while True:
             sock, _ = self._sock.accept()

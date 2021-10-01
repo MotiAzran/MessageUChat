@@ -27,7 +27,7 @@ def register_handler(sock, client_id, payload_size):
     name, pub_key = struct.unpack(REQUEST_PAYLOAD_PATTERN, sock.recv(payload_size))
     name = name.decode().strip('\0')
 
-    # Write new user to database
+    # Write new client to database
     client = Client.create_client(name, pub_key)
     ServerDatabase.register_client(client)
 
