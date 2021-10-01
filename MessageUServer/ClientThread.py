@@ -19,6 +19,10 @@ class ClientThread(Thread):
 
     def run(self):
         client_id, version, code, payload_size = self._get_request_header()
+        if not ServerDatabase.is_client_id_exists(client_id):
+            send_general_error(self._sock)
+            return
+
         if code in self._handlers:
             try:
                 self._handlers[code](self._sock, client_id, payload_size)
