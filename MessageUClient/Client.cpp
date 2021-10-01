@@ -135,7 +135,7 @@ void Client::send_text_message(const Types::Host& host)
 
 	Socket sock(host);
 
-	Protocol::SendTextMessageRequest request(_id, Common::VERSION, client.id, client.aes.encrypt(message));
+	Protocol::SendTextMessageRequest request(_id, Common::VERSION, client.id, AESWrapper(client.aes_key).encrypt(message));
 	sock.send(request.serialize());
 
 	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
@@ -172,7 +172,7 @@ void Client::send_symetric_key(const Types::Host& host)
 
 	Socket sock(host);
 
-	Protocol::SendSymetricKeyRequest request(_id, Common::VERSION, client.id, client.rsapub.encrypt(_aes.getKey()));
+	Protocol::SendSymetricKeyRequest request(_id, Common::VERSION, client.id, RSAPublicWrapper(client.public_key).encrypt(_aes.getKey()));
 	sock.send(request.serialize());
 
 	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));

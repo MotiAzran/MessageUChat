@@ -4,8 +4,6 @@
 #include <map>
 #include <string>
 #include "Types.h"
-#include "AESWrapper.h"
-#include "RSAWrapper.h"
 
 class ClientsList
 {
@@ -17,16 +15,16 @@ public:
 	{
 		Types::ClientID id;
 		std::string name;
-		RSAPublicWrapper rsapub;
-		AESWrapper aes;
+		Types::PublicKey public_key;
+		Types::AESKey aes_key;
 
 		ClientField(const Types::ClientID& id, const std::string& name,
-			const Types::PublicKey& public_key, const Types::AESKey& aes) :
-			id(id), name(name), rsapub(public_key), aes(aes) {}
+			const Types::PublicKey& public_key, const Types::AESKey& aes_key) :
+			id(id), name(name), public_key(public_key), aes_key(aes_key) {}
 
 		ClientField(const MapKey& key, const MapValue& value) :
 			id(std::get<Types::ClientID>(key)), name(std::get<std::string>(key)),
-			rsapub(std::get<Types::PublicKey>(value)), aes(std::get<Types::AESKey>(value)) {}
+			public_key(std::get<Types::PublicKey>(value)), aes_key(std::get<Types::AESKey>(value)) {}
 	};
 
 public:
@@ -34,7 +32,7 @@ public:
 	virtual ~ClientsList() = default;
 
 	void insert(const Types::ClientID& id, const std::string& name,
-		const Types::PublicKey& public_key, const Types::AESKey& aes);
+		const Types::PublicKey& public_key, const Types::AESKey& aes_key);
 	void insert(const Types::ClientID& id, const std::string& name);
 	
 	template <typename Key, typename Val,
