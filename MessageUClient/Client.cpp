@@ -64,7 +64,7 @@ void Client::get_clients_list(const Types::Host& host)
 	Protocol::GetClientsListRequest request(_id, Common::VERSION);
 	sock.send(request.serialize());
 
-	Protocol::ClientsListResponse response(Protocol::get_response(sock));
+	Protocol::ClientsListResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
 	if (response.is_done())
 	{
 		std::cout << "No other clients" << std::endl;
@@ -92,7 +92,7 @@ void Client::get_client_public_key(const Types::Host& host)
 	sock.send(request.serialize());
 
 	// Receive response
-	Protocol::GetPublicKeyResponse response(Protocol::get_response(sock));
+	Protocol::GetPublicKeyResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();
@@ -108,7 +108,7 @@ void Client::get_waiting_messages(const Types::Host& host)
 	Protocol::GetWaitingMessagesRequest request(_id, Common::VERSION);
 	sock.send(request.serialize());
 
-	Protocol::GetWaitingMessagesResponse response(Protocol::get_response(sock));
+	Protocol::GetWaitingMessagesResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
 	if (response.is_done())
 	{
 		std::cout << "No waiting messages" << std::endl;
@@ -138,7 +138,7 @@ void Client::send_text_message(const Types::Host& host)
 	Protocol::SendTextMessageRequest request(_id, Common::VERSION, client.id, client.aes.encrypt(message));
 	sock.send(request.serialize());
 
-	Protocol::SendMessageResponse response(Protocol::get_response(sock));
+	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();
@@ -154,7 +154,7 @@ void Client::request_symetric_key(const Types::Host& host)
 	Protocol::RequestSymetricKeyRequest request(_id, Common::VERSION, client.id);
 	sock.send(request.serialize());
 
-	Protocol::SendMessageResponse response(Protocol::get_response(sock));
+	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();
@@ -175,7 +175,7 @@ void Client::send_symetric_key(const Types::Host& host)
 	Protocol::SendSymetricKeyRequest request(_id, Common::VERSION, client.id, client.rsapub.encrypt(_aes.getKey()));
 	sock.send(request.serialize());
 
-	Protocol::SendMessageResponse response(Protocol::get_response(sock));
+	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();

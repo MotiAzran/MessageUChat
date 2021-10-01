@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <string>
 #include "ProtocolCommon.h"
-#include "Socket.h"
 
 namespace Protocol
 {
@@ -12,13 +11,11 @@ namespace Protocol
 		static const uint32_t HEADER_SIZE = sizeof(uint8_t) + sizeof(Protocol::ResponseCode) + sizeof(uint32_t);
 
 		uint8_t version;
-		ResponseCode code;
-		std::string payload;
+		Protocol::ResponseCode code;
+		uint32_t payload_size;
 
-		explicit Response(const uint8_t version, const ResponseCode code, std::string&& payload) :
-			version(version), code(code), payload(std::move(payload)) {}
+		explicit Response(std::string&& header_data);
 		virtual ~Response() = default;
-	};
 
-	Response get_response(Socket& sock);
+	};
 }

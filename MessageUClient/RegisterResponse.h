@@ -5,9 +5,9 @@
 
 namespace Protocol
 {
-	struct RegisterResponse
+	struct RegisterResponse : public Response
 	{
-		explicit RegisterResponse(Response&& response);
+		explicit RegisterResponse(const Types::ReaderFunc& reader);
 		virtual ~RegisterResponse() = default;
 
 		Types::ClientID client_id;

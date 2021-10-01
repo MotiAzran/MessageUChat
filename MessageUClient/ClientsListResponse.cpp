@@ -5,10 +5,12 @@
 
 using namespace Protocol;
 
-ClientsListResponse::ClientsListResponse(Response&& response) :
-	_payload(std::move(response.payload))
+ClientsListResponse::ClientsListResponse(const Types::ReaderFunc& reader) :
+	Response(reader(Response::HEADER_SIZE)),
+	_reader(reader),
+	_remaining_entries(payload_size / ClientEntry::SIZE)
 {
-	if (ResponseCode::ClientsListSent != response.code)
+	if (ResponseCode::ClientsListSent != code)
 	{
 		throw ServerErrorException();
 	}
@@ -16,7 +18,8 @@ ClientsListResponse::ClientsListResponse(Response&& response) :
 
 ClientEntry ClientsListResponse::get_next_entry()
 {
-	Deserializer entry(_payload.read(ClientEntry::SIZE));
+	Deserializer entry(_reader(ClientEntry::SIZE));
+	--_remaining_entries;
 
 	Types::ClientID id = entry.read_client_id();
 	auto name = entry.read(Common::MAX_CLIENT_NAME_LENGTH);

@@ -76,7 +76,7 @@ void MessageUMenu::_register()
 	Protocol::RegisterRequest request(Types::ClientID(), Common::VERSION, client_name, rsapriv.getPublicKey());
 	sock.send(request.serialize());
 
-	Protocol::RegisterResponse response(Protocol::get_response(sock));
+	Protocol::RegisterResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
 
 	_client = new Client(client_name, response.client_id, rsapriv.getPrivateKey());
 	_write_client_info();

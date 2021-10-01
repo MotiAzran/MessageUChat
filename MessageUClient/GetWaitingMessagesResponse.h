@@ -7,16 +7,17 @@
 
 namespace Protocol
 {
-	class GetWaitingMessagesResponse
+	class GetWaitingMessagesResponse : public Response
 	{
 	public:
-		explicit GetWaitingMessagesResponse(Response&& response);
+		explicit GetWaitingMessagesResponse(const Types::ReaderFunc& reader);
 		virtual ~GetWaitingMessagesResponse() = default;
 
 		MessageEntry read_next_message();
-		bool is_done() const { return 0 == _payload.size(); }
+		bool is_done() const { return 0 == _size_left_to_read; }
 
 	private:
-		Deserializer _payload;
+		Types::ReaderFunc _reader;
+		uint32_t _size_left_to_read;
 	};
 }

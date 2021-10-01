@@ -2,6 +2,8 @@
 
 #include <utility>
 #include <array>
+#include <string>
+#include <functional>
 #include "Common.h"
 #include "IPAddress.h"
 
@@ -12,4 +14,5 @@ namespace Types
 	using AESKey = std::array<uint8_t, Common::AES_KEY_SIZE>;
 	using Port = uint16_t;
 	using Host = std::pair<IPAddress, Port>;
+	using ReaderFunc = std::function<std::string(const uint32_t)>;
 }

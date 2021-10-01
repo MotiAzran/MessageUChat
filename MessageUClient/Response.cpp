@@ -3,13 +3,11 @@
 
 using namespace Protocol;
 
-Response Protocol::get_response(Socket& sock)
+Response::Response(std::string&& header_data)
 {
-	Deserializer header(sock.receive(Response::HEADER_SIZE));
+	Deserializer header(std::move(header_data));
 
-	auto version = header.read<uint8_t>();
-	auto code = header.read<ResponseCode>();
-	auto payload_size = header.read<uint32_t>();
-	
-	return Response(version, code, sock.receive(payload_size));
+	version = header.read<uint8_t>();
+	code = header.read<Protocol::ResponseCode>();
+	payload_size = header.read<uint32_t>();
 }
