@@ -201,6 +201,7 @@
     <ClInclude Include="IPAddress.h" />
     <ClInclude Include="MessageUMenu.h" />
     <ClInclude Include="ProtocolCommon.h" />
+    <ClInclude Include="ProtocolUtils.h" />
     <ClInclude Include="RegisterRequest.h" />
     <ClInclude Include="RegisterResponse.h" />
     <ClInclude Include="Request.h" />

@@ -3,6 +3,7 @@
 #include <filesystem>
 #include "Socket.h"
 #include "StringUtils.h"
+#include "ProtocolUtils.h"
 #include "Exceptions.h"
 #include "RegisterRequest.h"
 #include "RegisterResponse.h"
@@ -69,11 +70,9 @@ void MessageUMenu::_register()
 	// Create connection with the server
 	Socket sock(_server_host);
 
-	// Send request
-	Protocol::RegisterRequest request(Types::ClientID(), Common::VERSION, client_name, rsapriv.getPublicKey());
-	sock.send(request.serialize());
+	Protocol::send_request(sock, Protocol::RegisterRequest(Types::ClientID(), Common::VERSION, client_name, rsapriv.getPublicKey()));
 
-	Protocol::RegisterResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
+	auto response = Protocol::receive_response< Protocol::RegisterResponse>(sock);
 
 	_client = new Client(client_name, response.client_id, rsapriv.getPrivateKey());
 	_write_client_info();

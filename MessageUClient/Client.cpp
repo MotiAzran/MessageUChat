@@ -4,6 +4,7 @@
 #include "Serializer.h"
 #include "Base64Wrapper.h"
 #include "Exceptions.h"
+#include "ProtocolUtils.h"
 #include "Client.h"
 
 // Requests
@@ -61,10 +62,9 @@ void Client::get_clients_list(const Types::Host& host)
 {
 	Socket sock(host);
 
-	Protocol::GetClientsListRequest request(_id, Common::VERSION);
-	sock.send(request.serialize());
+	Protocol::send_request(sock, Protocol::GetClientsListRequest(_id, Common::VERSION));
 
-	Protocol::ClientsListResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
+	auto response = Protocol::receive_response<Protocol::ClientsListResponse>(sock);
 	if (response.is_done())
 	{
 		std::cout << "No other clients" << std::endl;
@@ -88,11 +88,9 @@ void Client::get_client_public_key(const Types::Host& host)
 
 	Socket sock(host);
 
-	Protocol::GetPublicKeyRequest request(_id, Common::VERSION, client.id);
-	sock.send(request.serialize());
+	Protocol::send_request(sock, Protocol::GetPublicKeyRequest(_id, Common::VERSION, client.id));
 
-	// Receive response
-	Protocol::GetPublicKeyResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
+	auto response = Protocol::receive_response< Protocol::GetPublicKeyResponse>(sock);
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();
@@ -105,10 +103,9 @@ void Client::get_waiting_messages(const Types::Host& host)
 {
 	Socket sock(host);
 
-	Protocol::GetWaitingMessagesRequest request(_id, Common::VERSION);
-	sock.send(request.serialize());
+	Protocol::send_request(sock, Protocol::GetWaitingMessagesRequest(_id, Common::VERSION));
 
-	Protocol::GetWaitingMessagesResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
+	auto response = Protocol::receive_response<Protocol::GetWaitingMessagesResponse>(sock);
 	if (response.is_done())
 	{
 		std::cout << "No waiting messages" << std::endl;
@@ -135,10 +132,9 @@ void Client::send_text_message(const Types::Host& host)
 
 	Socket sock(host);
 
-	Protocol::SendTextMessageRequest request(_id, Common::VERSION, client.id, AESWrapper(client.aes_key).encrypt(message));
-	sock.send(request.serialize());
+	Protocol::send_request(sock, Protocol::SendTextMessageRequest(_id, Common::VERSION, client.id, AESWrapper(client.aes_key).encrypt(message)));
 
-	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
+	auto response = Protocol::receive_response<Protocol::SendMessageResponse>(sock);
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();
@@ -151,10 +147,9 @@ void Client::request_symetric_key(const Types::Host& host)
 
 	Socket sock(host);
 
-	Protocol::RequestSymetricKeyRequest request(_id, Common::VERSION, client.id);
-	sock.send(request.serialize());
+	Protocol::send_request(sock, Protocol::RequestSymetricKeyRequest(_id, Common::VERSION, client.id));
 
-	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
+	auto response = Protocol::receive_response<Protocol::SendMessageResponse>(sock);
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();
@@ -172,10 +167,9 @@ void Client::send_symetric_key(const Types::Host& host)
 
 	Socket sock(host);
 
-	Protocol::SendSymetricKeyRequest request(_id, Common::VERSION, client.id, RSAPublicWrapper(client.public_key).encrypt(_aes.getKey()));
-	sock.send(request.serialize());
+	Protocol::send_request(sock, Protocol::SendSymetricKeyRequest(_id, Common::VERSION, client.id, RSAPublicWrapper(client.public_key).encrypt(_aes.getKey())));
 
-	Protocol::SendMessageResponse response(std::bind(&Socket::receive, &sock, std::placeholders::_1));
+	auto response = Protocol::receive_response<Protocol::SendMessageResponse>(sock);
 	if (response.client_id != client.id)
 	{
 		throw ServerErrorException();

@@ -198,5 +198,8 @@
     <ClInclude Include="RegisterRequest.h">
       <Filter>Request</Filter>
     </ClInclude>
+    <ClInclude Include="ProtocolUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
