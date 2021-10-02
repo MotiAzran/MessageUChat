@@ -3,6 +3,7 @@ from DatabaseLock import DatabaseLock
 import Message
 import Client
 import sqlite3
+import inspect
 
 CLIENTS_TABLE_NAME = "Clients"
 MESSAGES_TABLE_NAME = "Messages"
@@ -18,9 +19,14 @@ def database_read(func):
     _exectue_cammand any other database function
     will cause deadlock
     """
-    def inner(*args, **kwargs):
-        with database_lock.lock_read():
-            return func(*args, **kwargs)
+    if inspect.isgeneratorfunction(func):
+        def inner(*args, **kwargs):
+            with database_lock.lock_read():
+                yield from func(*args, **kwargs)
+    else:
+        def inner(*args, **kwargs):
+            with database_lock.lock_read():
+                return func(*args, **kwargs)
 
     return inner
 
@@ -33,9 +39,14 @@ def database_write(func):
     _exectue_cammand any other database function
     will cause deadlock
     """
-    def inner(*args, **kwargs):
-        with database_lock.lock_write():
-            return func(*args, **kwargs)
+    if inspect.isgeneratorfunction(func):
+        def inner(*args, **kwargs):
+            with database_lock.lock_write():
+                yield from func(*args, **kwargs)
+    else:
+        def inner(*args, **kwargs):
+            with database_lock.lock_write():
+                return func(*args, **kwargs)
 
     return inner
 
@@ -45,7 +56,6 @@ def _execute_command(*args, **kwargs):
     Execute command and return it output
     """
     with sqlite3.connect(DATABASE_PATH) as db:
-        db.text_factory = bytes
         db.row_factory = sqlite3.Row
         c = db.cursor()
         return c.execute(*args, **kwargs)
