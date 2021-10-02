@@ -11,6 +11,13 @@ database_lock = DatabaseLock()
 
 
 def database_read(func):
+    """
+    Decorator for function that only
+    read once from the database
+    Note: If you use this decorator call only to
+    _exectue_cammand any other database function
+    will cause deadlock
+    """
     def inner(*args, **kwargs):
         with database_lock.lock_read():
             return func(*args, **kwargs)
@@ -19,6 +26,13 @@ def database_read(func):
 
 
 def database_write(func):
+    """
+    Decorator for function that only
+    write once to the database
+    Note: If you use this decorator call only to
+    _exectue_cammand any other database function
+    will cause deadlock
+    """
     def inner(*args, **kwargs):
         with database_lock.lock_write():
             return func(*args, **kwargs)
@@ -28,9 +42,10 @@ def database_write(func):
 
 def _execute_command(*args, **kwargs):
     """
-    Execute command and return command output
+    Execute command and return it output
     """
     with sqlite3.connect(DATABASE_PATH) as db:
+        db.text_factory = bytes
         db.row_factory = sqlite3.Row
         c = db.cursor()
         return c.execute(*args, **kwargs)
@@ -38,6 +53,9 @@ def _execute_command(*args, **kwargs):
 
 @database_write
 def create_clients_table():
+    """
+    Create clients table
+    """
     _execute_command(f'''CREATE TABLE {CLIENTS_TABLE_NAME}(ID TEXT PRIMARY KEY,
             Name TEXT UNIQUE,
             PublicKey TEXT NOT NULL,
@@ -46,6 +64,9 @@ def create_clients_table():
 
 @database_write
 def create_messages_table():
+    """
+    Create messages tables
+    """
     _execute_command(f'''CREATE TABLE {MESSAGES_TABLE_NAME}(ID INT PRIMARY KEY,
             ToClient TEXT,
             FromClient TEXT,
