@@ -1,16 +1,19 @@
-import ClientThread
+from ClientHandler import ClientHandler
 import ServerDatabase
 from NetworkUtils import validate_port
 from Common import *
+import selectors
 import socket
 
 
 class MessageUServer(object):
     def __init__(self):
-        self._host = (SERVER_IP, self.get_server_port())
-        self._sock = self.initialize_server_socket(self._host)
-
         ServerDatabase.initialize_database()
+
+        self._sock = self.initialize_server_socket((SERVER_IP, self.get_server_port()))
+
+        self._sel = selectors.DefaultSelector()
+        self._sel.register(self._sock, selectors.EVENT_READ, self.accept)
 
     @staticmethod
     def get_server_port():
@@ -26,7 +29,8 @@ class MessageUServer(object):
     def initialize_server_socket(host):
         sock = socket.socket()
         sock.bind(host)
-        sock.listen(5)
+        sock.listen(100)
+        sock.setblocking(False)
 
         return sock
 
@@ -38,10 +42,24 @@ class MessageUServer(object):
         if not ServerDatabase.is_table_exists(ServerDatabase.MESSAGES_TABLE_NAME):
             ServerDatabase.create_messages_table()
 
+    def accept(self, sock):
+        client_sock, _ = sock.accept()
+        client_sock.setblocking(False)
+        self._sel.register(client_sock, selectors.EVENT_READ, self.handle_client)
+
+    def handle_client(self, sock):
+        try:
+            ClientHandler(sock).handle()
+        finally:
+            self._sel.unregister(sock)
+            sock.close()
+
     def serve(self):
         while True:
-            sock, _ = self._sock.accept()
-            ClientThread.ClientThread(sock).start()
+            events = self._sel.select()
+            for key, _ in events:
+                callback = key.data
+                callback(key.fileobj)
 
 
 def main():
