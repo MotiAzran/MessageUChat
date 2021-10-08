@@ -26,7 +26,7 @@ class MessageUServer(object):
         return int(data)
 
     @staticmethod
-    def initialize_server_socket(host):
+    def initialize_server_socket(host: tuple[str, int]):
         sock = socket.socket()
         sock.bind(host)
         sock.listen(100)
@@ -42,12 +42,12 @@ class MessageUServer(object):
         if not ServerDatabase.is_table_exists(ServerDatabase.MESSAGES_TABLE_NAME):
             ServerDatabase.create_messages_table()
 
-    def accept(self, sock):
+    def accept(self, sock: socket.socket):
         client_sock, _ = sock.accept()
         client_sock.setblocking(False)
         self._sel.register(client_sock, selectors.EVENT_READ, self.handle_client)
 
-    def handle_client(self, sock):
+    def handle_client(self, sock: socket.socket):
         try:
             ClientHandler(sock).handle()
         finally:

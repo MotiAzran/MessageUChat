@@ -1,4 +1,4 @@
-def validate_port(port):
+def validate_port(port: str) -> bool:
     """
     Check port is valid
     :param port: port to check

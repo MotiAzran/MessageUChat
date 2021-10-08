@@ -1,3 +1,4 @@
+from typing import Iterable
 from Common import DATABASE_PATH
 from DatabaseLock import DatabaseLock
 import Message
@@ -86,7 +87,7 @@ def create_messages_table():
 
 
 @database_read
-def is_table_exists(table_name):
+def is_table_exists(table_name: str):
     """
     Checks if given table exists
     :param table_name: Table name to check
@@ -108,7 +109,7 @@ def initialize_database():
 
 
 @database_read
-def is_client_name_exists(name):
+def is_client_name_exists(name: str) -> bool:
     """
     Checks if client name already exists
     in the table
@@ -120,7 +121,7 @@ def is_client_name_exists(name):
 
 
 @database_read
-def is_client_id_exists(id_):
+def is_client_id_exists(id_: bytes) -> bool:
     """
     Checks if client ID already exist
     in the table
@@ -132,7 +133,7 @@ def is_client_id_exists(id_):
 
 
 @database_write
-def register_client(client):
+def register_client(client: Client):
     """
     Add new client to clients table
     :param client: Client to add
@@ -142,7 +143,7 @@ def register_client(client):
 
 
 @database_read
-def clients_count():
+def clients_count() -> int:
     """
     Returns the number of registered clients
     """
@@ -151,7 +152,7 @@ def clients_count():
 
 
 @database_read
-def clients_list():
+def clients_list() -> Iterable[Client.Client]:
     """
     Returns clients list
     """
@@ -163,7 +164,7 @@ def clients_list():
 
 
 @database_read
-def get_client_public_key(client_id):
+def get_client_public_key(client_id: bytes) -> bytes:
     """
     Get public key of given client
     :param client_id: ID of the requested client
@@ -174,7 +175,7 @@ def get_client_public_key(client_id):
 
 
 @database_write
-def add_message(message):
+def add_message(message: Message):
     """
     Add message to messages table
     :param message: Message to add
@@ -185,7 +186,7 @@ def add_message(message):
 
 
 @database_read
-def get_client_waiting_messages(client_id):
+def get_client_waiting_messages(client_id: bytes) -> Iterable[Message.Message]:
     """
     Get client waiting messages
     :param client_id: ID of the client
@@ -200,7 +201,7 @@ def get_client_waiting_messages(client_id):
 
 
 @database_write
-def delete_client_waiting_messages(client_id):
+def delete_client_waiting_messages(client_id: bytes):
     """
     Delete client messages
     :param client_id: ID of the client we want to delete
@@ -210,7 +211,7 @@ def delete_client_waiting_messages(client_id):
 
 
 @database_read
-def get_max_message_id():
+def get_max_message_id() -> int:
     """
     Returns max message ID from the database
     """

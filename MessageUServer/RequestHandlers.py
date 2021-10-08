@@ -4,19 +4,20 @@ from Message import Message, MessageType
 from Common import VERSION
 from Client import Client
 import ServerDatabase
+import socket
 
 
-def _send_response_header(sock, code, payload_size):
+def _send_response_header(sock: socket.socket, code: int, payload_size: int):
     RESPONSE_HEADER_PATTERN = "<BHL"
     sock.sendall(struct.pack(RESPONSE_HEADER_PATTERN, VERSION, code, payload_size))
 
 
-def send_general_error(sock):
+def send_general_error(sock: socket.socket):
     GENERAL_ERROR_CODE = 9000
     _send_response_header(sock, GENERAL_ERROR_CODE, 0)
 
 
-def register_handler(sock, client_id, payload_size):
+def register_handler(sock: socket.socket, client_id: bytes, payload_size: int):
     REGISTER_CODE = 2000
     REQUEST_PAYLOAD_PATTERN = "<255s160s"
 
@@ -36,7 +37,7 @@ def register_handler(sock, client_id, payload_size):
     sock.sendall(client.identifier)
 
 
-def send_clients_list(sock, client_id, payload_size):
+def send_clients_list(sock: socket.socket, client_id: bytes, payload_size: int):
     SEND_LIST_CODE = 2001
     CLIENT_ENTRY_PATTERN = "<16s255s"
 
@@ -59,7 +60,7 @@ def send_clients_list(sock, client_id, payload_size):
         sock.sendall(client.name.ljust(Client.MAX_USER_NAME, '\0').encode())
 
 
-def send_public_key(sock, client_id, payload_size):
+def send_public_key(sock: socket.socket, client_id: bytes, payload_size: int):
     SEND_PUBLIC_KEY_CODE = 2002
     REQUEST_PAYLOAD_PATTERN = "<16s"
     RESPONSE_PAYLOAD_PATTERN = "<16s160s"
@@ -77,7 +78,7 @@ def send_public_key(sock, client_id, payload_size):
     sock.sendall(struct.pack(RESPONSE_PAYLOAD_PATTERN, requested_client_id, public_key))
 
 
-def send_waiting_messages(sock, client_id, payload_size):
+def send_waiting_messages(sock: socket.socket, client_id: bytes, payload_size: int):
     SEND_WAITING_MESSAGES_CODE = 2004
     RESPONSE_PAYLOAD_PATTERN = "<16sLBL"
 
@@ -103,7 +104,7 @@ def send_waiting_messages(sock, client_id, payload_size):
     ServerDatabase.delete_client_waiting_messages(client_id)
 
 
-def send_message(sock, client_id, payload_size):
+def send_message(sock: socket.socket, client_id: bytes, payload_size: int):
     SEND_MESSAGE_CODE = 2003
     REQUEST_PAYLOAD_PATTERN = "<16sBL"
     RESPONSE_PAYLOAD_PATTERN = "<16sL"

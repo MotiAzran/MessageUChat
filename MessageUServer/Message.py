@@ -14,7 +14,7 @@ class Message(object):
     counter_lock = threading.Lock()
     message_counter = ServerDatabase.get_max_message_id() + 1
 
-    def __init__(self, id_, to_id, from_id, message_type, content):
+    def __init__(self, id_: int, to_id: bytes, from_id: bytes, message_type: MessageType, content: bytes):
         if not ServerDatabase.is_client_id_exists(to_id) or not ServerDatabase.is_client_id_exists(from_id):
             raise ValueError("User not exists")
 
@@ -28,7 +28,7 @@ class Message(object):
         self._content = content
 
     @classmethod
-    def create_new_message(cls, to_id, from_id, message_type, content):
+    def create_new_message(cls, to_id: bytes, from_id: bytes, message_type: MessageType, content: bytes):
         """
         Create new message instance
         :param to_id: ID of the message receiver

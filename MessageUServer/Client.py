@@ -6,14 +6,14 @@ import uuid
 class Client(object):
     MAX_USER_NAME = 255
 
-    def __init__(self, id_, name, public_key, last_seen):
+    def __init__(self, id_: bytes, name: str, public_key: bytes, last_seen: datetime.datetime):
         self._id = id_
         self._name = name
         self._public_key = public_key
         self._last_seen = last_seen
 
     @classmethod
-    def create_client(cls, name, public_key):
+    def create_client(cls, name: str, public_key: bytes):
         """
         Create new client instance
         :param name: Client name

@@ -1,12 +1,13 @@
 from RequestHandlers import *
 import struct
+import socket
 
 
 class ClientHandler(object):
     """
     Handle client request session
     """
-    def __init__(self, sock):
+    def __init__(self, sock: socket.socket):
         super().__init__()
         self._sock = sock
 
