@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Iterable
 from Common import DATABASE_PATH
 from DatabaseLock import DatabaseLock

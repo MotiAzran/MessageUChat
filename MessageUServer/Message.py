@@ -1,5 +1,5 @@
 from enum import Enum, unique
-import ServerDatabase
+from ServerDatabase import get_max_message_id, is_client_id_exists
 import threading
 
 
@@ -12,10 +12,10 @@ class MessageType(Enum):
 
 class Message(object):
     counter_lock = threading.Lock()
-    message_counter = ServerDatabase.get_max_message_id() + 1
+    message_counter = get_max_message_id() + 1
 
     def __init__(self, id_: int, to_id: bytes, from_id: bytes, message_type: MessageType, content: bytes):
-        if not ServerDatabase.is_client_id_exists(to_id) or not ServerDatabase.is_client_id_exists(from_id):
+        if not is_client_id_exists(to_id) or not is_client_id_exists(from_id):
             raise ValueError("User not exists")
 
         if not isinstance(message_type, MessageType):
